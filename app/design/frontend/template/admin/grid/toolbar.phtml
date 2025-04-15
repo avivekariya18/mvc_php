@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Pagination</title>
+    <style>
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .pagination-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+            padding: 30px;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination-limit {
+            display: flex;
+            align-items: center;
+        }
+
+        .pagination-limit label {
+            margin-right: 15px;
+            font-weight: 600;
+            color: #495057;
+            transition: color 0.3s ease;
+        }
+
+        .pagination-limit select {
+            padding: 10px 15px;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .pagination-limit select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .pagination-info {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .pagination-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .page-item {
+            list-style: none;
+            margin: 0 2px;
+        }
+
+        .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            background-color: transparent;
+        }
+
+        .page-link:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            border-color: rgba(0, 123, 255, 0.3);
+            color: #0056b3;
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            opacity: 0.6;
+        }
+
+        .current-page-input {
+            width: 60px;
+            padding: 8px 12px;
+            text-align: center;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .current-page-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .go-to-page {
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #007bff 0%, #0069d9 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .go-to-page:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+            background: linear-gradient(135deg, #0069d9 0%, #005cbf 100%);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .pagination-container {
+                margin: 1rem;
+                padding: 20px;
+            }
+
+            .pagination-controls {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .pagination-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-link {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="pagination-container"> -->
+        <!-- This is where you'd put your PHP variable for the count -->
+        <div id="productCountData" data-total-count="<?php echo $this->getTotalRecords(); ?>"></div>
+
+        <form action="<?php $this->getUrl('*/*/*') ?>/" method="get" id="paginationForm">
+            <div class="pagination-controls">
+                <div class="pagination-limit">
+                    <label for="limit">Show:</label>
+                    <select name="limit" id="limit" onchange="this.form.submit()">
+                        <!-- <option value="5">5 items</option> -->
+                        <option value="10">10 items</option>
+                        <option value="15">15 items</option>
+                        <option value="20">20 items</option>
+                        <option value="50">50 items</option>
+                        <option value="100">100 items</option>
+                    </select>
+                </div>
+                <input type="hidden" name="page" id="pageInput" value="1">
+
+                <nav aria-label="Product pagination">
+                    <ul class="pagination-nav" id="paginationList">
+                        <!-- Pagination will be dynamically generated here -->
+                    </ul>
+                </nav>
+                <div class="pagination-info">
+                    Showing <span id="startItem">0</span>-<span id="endItem">0</span> of <span id="totalItems">0</span> items
+                </div>
+            </div>
+        </form>
+    <!-- </div> -->
+
+    <script>
+        // Current state variables
+        let currentPage = 1;
+        let itemsPerPage = 5;
+        let totalItems = 0;
+        let totalPages = 0;
+
+        // Initialize the pagination
+        function initPagination() {
+            // Get total items from PHP variable
+            const productCountElement = document.getElementById('productCountData');
+            if (productCountElement) {
+                totalItems = parseInt(productCountElement.getAttribute('data-total-count')) || 0;
+            }
+
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            currentPage = parseInt(urlParams.get('page')) || 1;
+            itemsPerPage = parseInt(urlParams.get('limit')) || 5;
+
+            // Calculate total pages
+            totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            // Update the form values
+            document.getElementById('limit').value = itemsPerPage.toString();
+            document.getElementById('pageInput').value = currentPage.toString();
+
+            // Ensure current page is valid
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+                document.getElementById('pageInput').value = currentPage.toString();
+            }
+
+            // Set the form action to current URL
+            updateFormAction();
+
+            // Generate pagination
+            generatePagination();
+
+            // Update pagination info
+            updatePaginationInfo();
+        }
+
+        // Update form action to use current URL instead of hardcoded path
+        function updateFormAction() {
+            const paginationForm = document.getElementById('paginationForm');
+
+            // Get current URL without query parameters
+            let currentUrl = window.location.href.split('?')[0];
+
+            // Ensure the URL ends with a forward slash
+            if (!currentUrl.endsWith('/')) {
+                currentUrl += '/';
+            }
+
+            // Update the form action to current URL
+            paginationForm.action = currentUrl;
+        }
+
+        // Generate the pagination buttons based on the total pages
+        function generatePagination() {
+            const paginationList = document.getElementById('paginationList');
+            paginationList.innerHTML = '';
+
+            // Don't show pagination if no items or only one page
+            if (totalItems === 0 || totalPages <= 1) {
+                return;
+            }
+
+            // Previous button
+            const prevButton = document.createElement('li');
+            prevButton.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevButton.id = 'prevPage';
+            prevButton.innerHTML = `
+        <a class="page-link" href="#" aria-label="Previous" onclick="goToPage('prev'); return false;">
+            &laquo;
+        </a>
+    `;
+            paginationList.appendChild(prevButton);
+
+            // Determine which page buttons to show
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+
+            // Adjust if we're near the end
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            // First page button (if not already included)
+            if (startPage > 1) {
+                const firstPageItem = document.createElement('li');
+                firstPageItem.className = 'page-item';
+                firstPageItem.setAttribute('data-page', '1');
+                firstPageItem.innerHTML = `
+            <a class="page-link" href="#" onclick="goToPage(1); return false;">1</a>
+        `;
+                paginationList.appendChild(firstPageItem);
+
+                // Ellipsis if there's a gap
+                if (startPage > 2) {
+                    const ellipsisItem = document.createElement('li');
+                    ellipsisItem.className = 'page-item';
+                    ellipsisItem.innerHTML = '<span class="page-link">...</span>';
+                    paginationList.appendChild(ellipsisItem);
+                }
+            }
+
+            // Page buttons
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.setAttribute('data-page', i.toString());
+                pageItem.innerHTML = `
+            <a class="page-link" href="#" onclick="goToPage(${i}); return false;">${i}</a>
+        `;
+                paginationList.appendChild(pageItem);
+            }
+
+            // Last page button (if not already included)
+            if (endPage < totalPages) {
+                // Ellipsis if there's a gap
+                if (endPage < totalPages - 1) {
+                    const ellipsisItem = document.createElement('li');
+                    ellipsisItem.className = 'page-item';
+                    ellipsisItem.innerHTML = '<span class="page-link">...</span>';
+                    paginationList.appendChild(ellipsisItem);
+                }
+
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = 'page-item';
+                lastPageItem.setAttribute('data-page', totalPages.toString());
+                lastPageItem.innerHTML = `
+            <a class="page-link" href="#" onclick="goToPage(${totalPages}); return false;">${totalPages}</a>
+        `;
+                paginationList.appendChild(lastPageItem);
+            }
+
+            // Next button
+            const nextButton = document.createElement('li');
+            nextButton.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextButton.id = 'nextPage';
+            nextButton.innerHTML = `
+        <a class="page-link" href="#" aria-label="Next" onclick="goToPage('next'); return false;">
+            &raquo;
+        </a>
+    `;
+            paginationList.appendChild(nextButton);
+
+            // Go to page input
+            if (totalPages > 1) {
+                const goToPageWrapper = document.createElement('li');
+                goToPageWrapper.className = 'page-item';
+                goToPageWrapper.style.marginLeft = '10px';
+                goToPageWrapper.innerHTML = `
+            <input type="number" class="current-page-input" id="goToPageInput" min="1" max="${totalPages}" value="${currentPage}">
+        `;
+                paginationList.appendChild(goToPageWrapper);
+
+                const goButton = document.createElement('li');
+                goButton.className = 'page-item';
+                goButton.innerHTML = `
+            <button type="button" class="go-to-page" onclick="goToPage(document.getElementById('goToPageInput').value)">Go</button>
+        `;
+                paginationList.appendChild(goButton);
+            }
+        }
+
+        // Update the pagination info text
+        function updatePaginationInfo() {
+            if (totalItems === 0) {
+                document.getElementById('startItem').textContent = '0';
+                document.getElementById('endItem').textContent = '0';
+                document.getElementById('totalItems').textContent = '0';
+                return;
+            }
+
+            const startItem = ((currentPage - 1) * itemsPerPage) + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+            document.getElementById('startItem').textContent = startItem;
+            document.getElementById('endItem').textContent = endItem;
+            document.getElementById('totalItems').textContent = totalItems;
+        }
+
+        // Navigate to a specific page
+        function goToPage(page) {
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--;
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                }
+            } else {
+                currentPage = parseInt(page);
+            }
+
+            // Validate page number
+            if (isNaN(currentPage) || currentPage < 1) {
+                currentPage = 1;
+            } else if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
+            // Update the hidden input
+            document.getElementById('pageInput').value = currentPage;
+
+            // Submit the form
+            document.getElementById('paginationForm').submit();
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initPagination();
+        };
+    </script>
+</body>
+
+</html>

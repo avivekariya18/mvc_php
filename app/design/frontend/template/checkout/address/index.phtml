@@ -1,0 +1,344 @@
+<style>
+    .checkout-container {
+        max-width: 1200px;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+    }
+
+    .checkout-header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eaeaea;
+        position: relative;
+    }
+
+    .checkout-header:after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #4a6cf7;
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .form-section {
+        margin-bottom: 15px;
+        padding: 15px;
+        border: 1px solid #eaeaea;
+        border-radius: 6px;
+        background-color: #fafafa;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .form-section:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-header {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-header:before {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 18px;
+        background: #4a6cf7;
+        margin-right: 8px;
+        border-radius: 2px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .form-control,
+    .form-select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: #4a6cf7;
+        box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+    }
+
+    .address-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .address-column {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .btn-checkout {
+        background: linear-gradient(135deg, #4a6cf7 0%, #2b4db7 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        min-width: 220px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 0 auto;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(74, 108, 247, 0.3);
+    }
+
+    .btn-checkout:hover {
+        background: linear-gradient(135deg, #3c5bd9 0%, #1e3c99 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(74, 108, 247, 0.4);
+    }
+
+    .btn-checkout:active {
+        /* / transform: translateY(0); / */
+        box-shadow: 0 2px 8px rgba(74, 108, 247, 0.4);
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .form-check-input {
+        margin-right: 8px;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+    }
+
+    .form-check-label {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* / Custom styling for required fields / */
+    .form-control:required,
+    .form-select:required {
+        background-image: radial-gradient(circle 4px, #ff0000 100%, transparent 100%);
+        background-size: 6px 6px;
+        background-position: right 6px top 6px;
+        background-repeat: no-repeat;
+    }
+
+    /* / Button container with progress indicator / */
+    .checkout-button-container {
+        margin-top: 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .checkout-progress {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-step {
+        width: 10px;
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 50%;
+        margin: 0 3px;
+    }
+
+    .progress-step.active {
+        background-color: #4a6cf7;
+    }
+
+    span {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h2 style="text-align: center; margin: 0;">Billing and Shipping Details</h2>
+    </div>
+    <form action="<?php echo $this->getUrl('checkout/address/save') ?>" method="POST">
+        <div class="form-section">
+            <div class="section-header">Personal Information</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="first_name">First Name</label>
+                    <input type="text" class="form-control validate-name validate-required" id="first_name" name="personal[fname]" placeholder="First name" value="<?php echo $this->billinginfo()->getfirstItem()->getFname() ?>">
+                    <span id="fname-error" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="last_name">Last Name</label>
+                    <input type="text" class="form-control validate-name validate-required" id="last_name" name="personal[lname]" placeholder="Last name" value="<?php echo $this->billinginfo()->getfirstItem()->getLname() ?>">
+                    <span id="lname-error" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">Email ID</label>
+                    <input type="text" id="email" name="email" class="validate-email validate-required" placeholder="Enter email" value="<?php echo $this->getEmail() ?>">
+                    <span id="email-error" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="personal[phone]" class="validate-number" placeholder="Phone number" value="<?php echo $this->billinginfo()->getfirstItem()->getPhone() ?>">
+                    <span id="phone-error" class="error-message"></span>
+                </div>
+            </div>
+        </div>
+        <div class="address-container">
+            <div class="address-column">
+                <div class="form-section">
+                    <div class="section-header">Billing Address</div>
+                    <input type="hidden" name="billing[address_id]" id="billing_address_id" value="<?php echo $this->billinginfo()->getfirstItem()->getAddressId() ?>">
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label class="form-label" for="billing_street">Street Address</label>
+                        <input type="text" class="form-control validate-address validate-required" id="billing_street" name="billing[street]" placeholder="Street address" value="<?php echo $this->billinginfo()->getfirstItem()->getStreet() ?>">
+                        <span id="bstreet-error" class="error-message"></span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="billing_city">City</label>
+                            <input type="text" class="form-control validate-name validate-required" id="billing_city" name="billing[city]" placeholder="City" value="<?php echo $this->billinginfo()->getfirstItem()->getCity() ?>">
+                            <span id="bcity-error" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="billing_region">State</label>
+                            <input type="text" class="form-control validate-name validate-required" id="billing_region" name="billing[region]" placeholder="State" value="<?php echo $this->billinginfo()->getfirstItem()->getRegion() ?>">
+                            <span id="bregion-error" class="error-message"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="billing_country">Country</label>
+                            <select class="form-select" id="billing_country" name="billing[country]">
+                                <option disabled>Select country</option>
+                                <?php $selectedCountry = $this->billinginfo()->getfirstItem()->getCountry(); ?>
+                                <option value="India" <?php echo ($selectedCountry == 'India') ? 'selected' : ''; ?>>India</option>
+                                <option value="USA" <?php echo ($selectedCountry == 'USA') ? 'selected' : ''; ?>>USA</option>
+                                <option value="UK" <?php echo ($selectedCountry == 'UK') ? 'selected' : ''; ?>>UK</option>
+                                <option value="Canada" <?php echo ($selectedCountry == 'Canada') ? 'selected' : ''; ?>>Canada</option>
+                            </select>
+                            <span id="bcountry-error" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="billing_zipcode">Zip Code</label>
+                            <input type="text" class="form-control validate-zipcode validate-required" id="billing_zipcode" name="billing[zipcode]" placeholder="Zip code" value="<?php echo $this->billinginfo()->getfirstItem()->getZipcode() ?>">
+                            <span id="bzipcode-error" class="error-message"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Shipping Address -->
+            <div class="address-column">
+                <div class="form-section">
+                    <div class="section-header">Shipping Address</div>
+                    <input type="hidden" name="shipping[address_id]" id="shipping_address_id" value="<?php echo $this->shippinginfo()->getfirstItem()->getAddressId() ?>">
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="form-check-input" id="same_as_billing" onclick="copyBilling()">
+                        <label class="form-check-label" for="same_as_billing">Same as Billing Address</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label class="form-label" for="shipping_street">Street Address</label>
+                        <input type="text" class="form-control validate-address validate-required" id="shipping_street" name="shipping[street]" placeholder="Street address" value="<?php echo $this->shippinginfo()->getfirstItem()->getStreet() ?>">
+                        <span id="sstreet-error" class="error-message"></span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping_city">City</label>
+                            <input type="text" class="form-control validate-name validate-required" id="shipping_city" name="shipping[city]" placeholder="City" value="<?php echo $this->shippinginfo()->getfirstItem()->getCity() ?>">
+                            <span id="scity-error" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="shipping_region">State</label>
+                            <input type="text" class="form-control validate-name validate-required" id="shipping_region" name="shipping[region]" placeholder="State" value="<?php echo $this->shippinginfo()->getfirstItem()->getRegion() ?>">
+                            <span id="sregion-error" class="error-message"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping_country">Country</label>
+                            <select class="form-select" id="shipping_country" name="shipping[country]">
+                                <option disabled>Select country</option>
+                                <?php $selectedCountry = $this->shippinginfo()->getfirstItem()->getCountry(); ?>
+                                <option value="India" <?php echo ($selectedCountry == 'India') ? 'selected' : ''; ?>>India</option>
+                                <option value="USA" <?php echo ($selectedCountry == 'USA') ? 'selected' : ''; ?>>USA</option>
+                                <option value="UK" <?php echo ($selectedCountry == 'UK') ? 'selected' : ''; ?>>UK</option>
+                                <option value="Canada" <?php echo ($selectedCountry == 'Canada') ? 'selected' : ''; ?>>Canada</option>
+                            </select>
+                            <span id="scountry-error" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="shipping_zipcode">Zip Code</label>
+                            <input type="text" class="form-control validate-zipcode validate-required" id="shipping_zipcode" name="shipping[zipcode]" placeholder="Zip code" value="<?php echo $this->shippinginfo()->getfirstItem()->getZipcode() ?>">
+                            <span id="szipcode-error" class="error-message"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Submit Button with Progress Indicator -->
+        <div class="checkout-button-container">
+            <div class="checkout-progress">
+                <div class="progress-step active"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+            <button type="submit" class="btn-checkout">Proceed to Checkout</button>
+        </div>
+    </form>
+</div>
+<script>
+    function copyBilling() {
+        if (document.getElementById('same_as_billing').checked) {
+            document.getElementById('shipping_street').value = document.getElementById('billing_street').value;
+            document.getElementById('shipping_city').value = document.getElementById('billing_city').value;
+            document.getElementById('shipping_region').value = document.getElementById('billing_region').value;
+            document.getElementById('shipping_country').value = document.getElementById('billing_country').value;
+            document.getElementById('shipping_zipcode').value = document.getElementById('billing_zipcode').value;
+        } else {
+            document.getElementById('shipping_street').value = "";
+            document.getElementById('shipping_city').value = "";
+            document.getElementById('shipping_region').value = "";
+            document.getElementById('shipping_country').value = "";
+            document.getElementById('shipping_zipcode').value = "";
+        }
+    }
+</script>

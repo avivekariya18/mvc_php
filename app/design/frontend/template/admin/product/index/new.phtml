@@ -1,0 +1,300 @@
+<?php
+// Get data
+$data = $this->getProductData();
+$attributes = $this->getAttribute();
+$url = Mage::getBaseUrl();
+// echo "<pre>";
+// print_r($data);
+?>
+<style>
+    /* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 20px;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto;
+}
+
+h2 {
+    color: #0038d1;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #0038d1;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0038d1;
+    box-shadow: 0px 0px 5px rgba(0, 56, 209, 0.5);
+    outline: none;
+}
+
+.btn-prim {
+    background: #0038d1;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.btn-prim:hover {
+    background: #002a9e;
+}
+
+/* Image Upload Styling */
+#imagePreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.existing-image, .new-image {
+    position: relative;
+    display: inline-block;
+}
+
+.existing-image img, .new-image img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger {
+    background-color:#002a9e;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #002a9e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+</style>
+<div class="container w-50 my-5 p-4 rounded shadow-sm bg-white">
+
+    <!-- Add Product Form -->
+    <h2 class="text-center mb-4" style="color:#002a9e;">Add Product</h2>
+
+    <form method="post" enctype="multipart/form-data" action="<?php echo $this->getUrl("*/*/save") ?>">
+        <input type="hidden" name="catalog_product[product_id]" value="<?php echo $data->getProductId(); ?>">
+
+        <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-control" name="catalog_product[name]" placeholder="Enter product name" value="<?php echo $data->getName(); ?>" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="catalog_product[description]" rows="3" placeholder="Enter product description"><?php echo $data->getDescription(); ?></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">SKU</label>
+            <input type="text" class="form-control" name="catalog_product[sku]" placeholder="Enter SKU" value="<?php echo $data->getSku(); ?>" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price (₹)</label>
+            <input type="number" step="0.01" class="form-control" name="catalog_product[price]" placeholder="Enter price" value="<?php echo $data->getPrice(); ?>" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Stock Quantity</label>
+            <input type="number" class="form-control" name="catalog_product[stock_quantity]" value="<?php echo $data->getStockQuantity(); ?>" min="0">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select" name="catalog_product[category_id]">
+                <option value="" disabled selected>Select Category</option>
+                <?php foreach ($this->cat_data as $category): ?>
+                    <option value="<?php echo $category->getcategoryId(); ?>" <?php echo $category->getCategoryId() == $data->getCategoryId() ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($category->getName()); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <hr>
+
+        <!-- Add Product Attributes Form -->
+        <h2 class="text-center mb-4" style="color: #002a9e;">Add Product Attributes</h2>
+        <!-- <input type="hidden" name="catalog_attribute[product_id]" > -->
+
+        <?php foreach ($attributes as $attribute): ?>
+            <?php
+            $attr = "get" . str_replace("_", "", ucwords($attribute->getName(), "_"));
+            ?>
+            <div class="mb-3">
+                <label class="form-label"><?php echo htmlspecialchars($attribute->getName()); ?></label>
+                <div>
+                    <?php echo $this->getHtmlField($attribute->getType(), [
+                        'class' => 'form-control',
+                        'name' => 'catalog_product[' . $attribute->getName() . ']',
+                        'value' => htmlspecialchars($data->$attr())
+                    ]); ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+
+        <hr>
+        <div class="container mt-5">
+            <h2>Upload Multiple Images</h2>
+            <div class="mb-3">
+                <label for="imageUpload" class="form-label">Choose Images</label>
+                <input class="form-control" type="file" id="imageUpload" name="catalog_media_gallery[image][]" accept="image/*" multiple>
+            </div>
+
+            <!-- Preview uploaded images -->
+            <div id="imagePreview" class="d-flex flex-wrap gap-3">
+                <?php
+                $filePaths = is_array($data->getFilePath()) ? $data->getFilePath() : [$data->getFilePath()];
+                foreach ($filePaths as $index => $filePath):
+                ?>
+                    <div class="position-relative existing-image text-center" data-file="<?php echo $filePath; ?>">
+                        <img src="<?php echo $url . $filePath; ?>" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                        <div class="mt-2">
+                            <label>
+                                <input type="radio" name="catalog_product[main_image]" value="<?php echo $filePath; ?>" <?php echo $index == 'main_image' ? 'checked' : ''; ?>>
+                                Set as Main Image
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-image" data-file="<?php echo $filePath; ?>">Delete</button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Hidden input to track deleted images -->
+            <input type="hidden" name="catalog_product[deleted_images]" id="deletedImages">
+        </div>
+
+
+        <button type="submit" class="btn-prim px-4 py-2">
+            <?php echo isset($data) && $data->getProductId() ? "Update Product" : "Submit Product"; ?>
+        </button>
+
+    </form>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deletedImagesInput = document.getElementById("deletedImages");
+
+        const deletedImages = [];
+       
+
+        // Add an event listener to handle click events
+        document.getElementById("imagePreview").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-image")) {
+                // Find the image container and retrieve the file path
+                const imageContainer = e.target.closest(".existing-image");
+                const filePath = imageContainer.getAttribute("data-file");
+
+                // Add the file path to the array
+                deletedImages.push(filePath);
+
+                // Store the array as a comma-separated value in the hidden input
+                deletedImagesInput.value = deletedImages.join(",");
+
+                // Remove the image preview from the DOM
+                imageContainer.remove();
+
+                // For debugging: log the updated deleted images array
+                console.log("Deleted images array:", deletedImages);
+            }
+        });
+
+
+
+        // Add preview for newly uploaded images
+        document.getElementById("imageUpload").addEventListener("change", function() {
+            const preview = document.getElementById("imagePreview");
+
+            Array.from(this.files).forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgContainer = document.createElement("div");
+                    imgContainer.className = "position-relative text-center new-image";
+                    imgContainer.innerHTML = `
+                    <img src="${e.target.result}" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                    <div class="mt-2">
+                        <label>
+                            <input type="radio" name="catalog_product[main_image]" value="${file.name}">
+                            Set as Main Image
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-2 remove-image">Delete</button>
+                `;
+                    preview.appendChild(imgContainer);
+
+                    // Remove new images
+                    imgContainer.querySelector(".remove-image").addEventListener("click", function() {
+                        imgContainer.remove();
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    });
+
+
+    // document.getElementById('imageUpload').addEventListener('change', function() {
+    // const preview = document.getElementById('imagePreview');
+    // preview.innerHTML = ''; // Clear previous previews
+
+    // Array.from(this.files).forEach((file, index) => {
+    // const reader = new FileReader();
+    // reader.onload = function(e) {
+    // const imgContainer = document.createElement('div');
+    // imgContainer.className = 'position-relative text-center';
+    // imgContainer.innerHTML = `
+    // <img src="${e.target.result}" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+    // <div class="mt-2">
+    // <label>
+    // <input type="radio" name="catalog_product[main_image]" value="${file.name}" ${index===0 ? 'checked' : '' }>
+    // Set as Main Image
+    // </label>
+    // </div>
+    // `;
+    // preview.appendChild(imgContainer);
+    // };
+    // reader.readAsDataURL(file);
+    // });
+    // });
+</script>

@@ -1,0 +1,15 @@
+product_id,name,description,sku,price,stock_quantity,category_id,created_at,updated_at
+67,"Elegant Floral Dress","A knee-length floral dress perfect for casual outings",WCL001,1298.00,50,9,"2025-02-25 18:07:42","2025-02-25 18:07:42"
+68,"Classic Shirt","Stylish denim jacket for a cool, casual look.",MCL001,1999.00,40,10,"2025-02-25 18:11:38","2025-02-25 18:11:38"
+69,"Kids Summer T-Shirt Set","Set of 3 soft cotton t-shirts with fun prints.",KCL001,1400.00,20,11,"2025-02-25 18:13:20","2025-02-25 18:13:20"
+70,"Gold-Plated Hoop Earrings","Stylish gold-plated hoop earrings for everyday wear",EAR001,400.00,10,8,"2025-02-25 18:16:06","2025-02-25 18:16:06"
+71,"Pearl Drop Earrings","Elegant pearl drop earrings for special occasions.",EAR003,899.00,10,12,"2025-02-25 18:18:55","2025-02-25 18:18:55"
+72,"iPhone 15 Pro Max","Apple latest smartphone featuring the A17 Bionic chip, 6.7 Super Retina XDR display, and titanium design.",MOB002,159999.00,10,3,"2025-02-25 18:24:34","2025-02-25 18:24:34"
+73,"OnePlus 11 5G","Powered by Snapdragon 8 Gen 2, a 6.7inches QHD+ display, and Hasselblad-tuned cameras.",MOB003,56999.00,12,3,"2025-02-25 18:26:38","2025-02-25 18:26:38"
+74,"Puma Running Shoes","Lightweight running shoes with breathable mesh and rubber sole, perfect for long runs.",SH001,5000.00,10,5,"2025-02-25 18:29:48","2025-02-25 18:29:48"
+75,"Nike Air Zoom Pegasus 40","Nike latest running shoe with responsive cushioning and durable outsole for ultimate comfort",SH002,8000.00,12,5,"2025-02-25 18:31:40","2025-02-25 18:31:40"
+82,"SmartFit Pro 5 Smart Watch","Magnetic Charging Cable, Quick Start Guide, Extra Silicone Strap
+",SMTW001,4999.00,14,7,"2025-02-27 13:17:00","2025-02-27 13:17:00"
+121,"Women t-shirt","   all available ",SMTW087,12456.00,14,9,"2025-02-28 09:36:30","2025-02-28 13:28:36"
+122,bottle,vasvghdgfzha,dvhsxhfsh54635463,12445.00,0,7,"2025-02-28 14:52:20","2025-02-28 14:52:20"
+123,oppo1245,sfadsgs,ed012,12333.00,20,3,"2025-03-03 11:56:12","2025-03-04 16:11:26"

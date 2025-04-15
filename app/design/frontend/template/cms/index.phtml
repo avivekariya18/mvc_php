@@ -1,0 +1,431 @@
+<?php
+$productDataList = $this->getProductList();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color:rgb(0, 73, 209);
+            --secondary-color: #333;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        /* Banner Slider */
+        .banner-section {
+            padding: 20px 0;
+        }
+
+        .banner-slider {
+            width: 100%;
+            height: 70vh;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .banner-slider .swiper-slide {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .banner-slider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .banner-slider .swiper-slide-active img {
+            transform: scale(1.05);
+        }
+
+        .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            padding: 30px;
+            color: white;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .banner-slider .swiper-slide-active .banner-overlay {
+            opacity: 1;
+        }
+
+        /* Navigation Buttons Style */
+        .swiper-button-next,
+        .swiper-button-prev {
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background-color: lightblue;
+            color: white;
+        }
+
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 18px;
+        }
+
+        .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background-color: lightblue;
+        }
+
+        /* Product Slider */
+        .products-section {
+            background-color: white;
+            padding: 60px 0;
+        }
+
+        .product-slider {
+            padding: 20px 0;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .product-image {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: lightblue;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .view-all {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .banner-slider {
+                height: 60vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner-slider {
+                height: 50vh;
+            }
+            .section-title {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .banner-slider {
+                height: 40vh;
+            }
+            .product-image {
+                height: 200px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Banner Section -->
+    <section class="banner-section">
+        <div class="container">
+            <div class="swiper banner-slider">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="media/banner/banner1.jpg" alt="Banner 1">
+                        <div class="banner-overlay">
+                            <h2>Discover Our Latest Collection</h2>
+                            <p>Explore trendy items at unbeatable prices</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="media/banner/banner2.jpg" alt="Banner 2">
+                        <div class="banner-overlay">
+                            <h2>New Season Arrivals</h2>
+                            <p>Check out our freshest styles</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="media/banner/banner3.jpg" alt="Banner 3">
+                        <div class="banner-overlay">
+                            <h2>Special Offers</h2>
+                            <p>Limited time deals you won't want to miss</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="media/banner/banner4.jpg" alt="Banner 4">
+                        <div class="banner-overlay">
+                            <h2>Premium Quality</h2>
+                            <p>Crafted with care for lasting quality</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="media/banner/banner5.png" alt="Banner 5">
+                        <div class="banner-overlay">
+                            <h2>Exclusive Collection</h2>
+                            <p>Find items that are uniquely you</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="media/banner/banner6.jpg" alt="Banner 6">
+                        <div class="banner-overlay">
+                            <h2>Customer Favorites</h2>
+                            <p>See what everyone's loving right now</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination banner-pagination"></div>
+                <div class="swiper-button-next banner-next"></div>
+                <div class="swiper-button-prev banner-prev"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            <div class="swiper product-slider">
+                <div class="swiper-wrapper">
+                    <?php foreach ($productDataList as $data): ?>
+                    <div class="swiper-slide">
+                        <a href="<?php echo $this->getUrl('catalog/product/view') . '/?product_id=' . $data->getProductId(); ?>" style="text-decoration:none; color:inherit;">
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="http://localhost/mvc_new/<?php echo $data->getFilePath(); ?>" alt="<?php echo htmlspecialchars($data->getName()); ?>">
+                                    <?php if (rand(0, 1) == 1): ?>
+                                    <span class="product-badge">New</span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name"><?php echo htmlspecialchars($data->getName()); ?></h3>
+                                    <div class="">₹<?php echo htmlspecialchars($data->getPrice()); ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="swiper-pagination product-pagination"></div>
+                <div class="swiper-button-next product-next"></div>
+                <div class="swiper-button-prev product-prev"></div>
+            </div>
+            <div class="view-all">
+                <a href="<?php echo $this->getUrl('catalog/product/list'); ?>" class="btn">
+                    View All Products <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Banner slider
+        const bannerSlider = new Swiper('.banner-slider', {
+            effect: 'fade',
+            grabCursor: true,
+            loop: true,
+            speed: 1000,
+            pagination: {
+                el: '.banner-pagination',
+                clickable: true,
+                dynamicBullets: true
+            },
+            navigation: {
+                nextEl: '.banner-next',
+                prevEl: '.banner-prev'
+            },
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false
+            }
+        });
+
+        // Product slider
+        const productSlider = new Swiper('.product-slider', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            grabCursor: true,
+            loop: true,
+            pagination: {
+                el: '.product-pagination',
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.product-next',
+                prevEl: '.product-prev'
+            },
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false
+            },
+            breakpoints: {
+                // when window width is >= 576px
+                576: {
+                    slidesPerView: 2,
+                    spaceBetween: 20
+                },
+                // when window width is >= 768px
+                768: {
+                    slidesPerView: 3,
+                    spaceBetween: 30
+                },
+                // when window width is >= 1024px
+                1024: {
+                    slidesPerView: 4,
+                    spaceBetween: 30
+                },
+                // when window width is >= 1280px
+                1280: {
+                    slidesPerView: 5,
+                    spaceBetween: 30
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

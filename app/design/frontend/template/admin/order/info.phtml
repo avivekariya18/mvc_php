@@ -1,0 +1,46 @@
+<?php
+// info.phtml - Updated with proper styling
+$orderDetails = $this->orderInfo();
+?>
+
+<div class="section order-info">
+    <h3>Order Summary</h3>
+    <div class="order-details">
+        <div class="order-detail-row">
+            <p><strong>Order No:</strong> <?php echo $orderDetails->getOrderNumber(); ?></p>
+            <p><strong>Order ID:</strong> <?php echo $orderDetails->getOrderId(); ?></p>
+        </div>
+        
+        <div class="order-summary">
+            <p><strong>Subtotal:</strong> 
+                <?php echo (int)$orderDetails->getTotalAmount() + (int)$orderDetails->getCouponDiscount() - (int)$orderDetails->getShippingAmount(); ?>
+            </p>
+            <p><strong>Discount:</strong> <?php echo $orderDetails->getCouponDiscount() ?></p>
+            <?php if ($orderDetails->getCouponCode()): ?>
+                <p><strong>Coupon Code:</strong> <?php echo $orderDetails->getCouponCode(); ?></p>
+            <?php endif; ?>
+            <p><strong>Delivery Charge:</strong> <?php echo $orderDetails->getShippingAmount(); ?></p>
+            
+            <div class="order-total">
+                <p><strong>Total Amount:</strong> <?php echo $orderDetails->getTotalAmount(); ?></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-status">
+        <h3>Payment & Status</h3>
+        <p><strong>Payment Method:</strong> <?php echo $orderDetails->getPaymentMethod(); ?></p>
+        <p><strong>Order Status:</strong> <span id="order-status" class="status-badge"><?php echo $orderDetails->getStatus() ? $orderDetails->getStatus() : 'Pending'; ?></span></p>
+        
+        <button id="update-status" class="btn-primary">Update Status</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById("update-status").addEventListener("click", function() {
+        const statusElement = document.getElementById("order-status");
+        statusElement.innerText = "Completed";
+        statusElement.className = "status-badge status-completed";
+        alert("Order status updated to Completed!");
+    });
+</script>

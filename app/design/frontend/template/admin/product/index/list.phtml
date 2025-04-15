@@ -1,0 +1,56 @@
+<?php $data = $this->listdata(); 
+// $data1 = $this->getProducts()[0];
+// print_r($data1->getName());
+?>
+ <?php $this->getChildHtml('');?> 
+ <div class="  m-5  rounded shadow-sm bg-white">
+    <button class="export-container">
+               <a href="<?php echo $this->getUrl('*/*/exportCsv'); ?>" class="export-btn">Export to CSV</a>
+           </button>
+    <br>
+    <h2 class="text-center mb-4" style="color: #d10063;">Product List</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>SKU</th>
+                <th>Price (₹)</th>
+                <th>Stock Quantity</th>
+                <th>Category</th>
+                <th>color</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($data)): ?>
+                <?php foreach ($data as $key => $product): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($product->getProductId()); ?></td>
+                        <td><?php echo htmlspecialchars($product->getName()); ?></td>
+                        <td><?php echo htmlspecialchars($product->getSku()); ?></td>
+                        <td><?php echo htmlspecialchars($product->getPrice()); ?></td>
+                        <td><?php echo htmlspecialchars($product->getStockQuantity()); ?></td>
+                        <td><?php echo htmlspecialchars($product->getCategoryName()); ?></td>
+                        <td><?php echo htmlspecialchars($product->getColor()); ?></td>
+                        <td>
+                            <a href="<?php echo $this->getUrl('admin/product_index/new') . '/?edit_id=' . $product->getProductId(); ?>"
+                                class="btn btn-primary">Edit</a>
+
+                            <a href="<?php echo $this->getUrl('admin/product_index/delete') . '/?delete_id=' . $product->getProductId(); ?>"
+                                class="btn btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this item?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" class="text-center">No products found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>

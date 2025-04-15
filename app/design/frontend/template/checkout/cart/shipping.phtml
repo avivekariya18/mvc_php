@@ -1,0 +1,117 @@
+<style>
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-check-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-check-input {
+            border: 2px solid #fb2e86;
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-check-input:checked {
+            background-color: #fb2e86;
+            border-color: #fb2e86;
+        }
+
+        .btn-primary, .btn-success {
+            background-color: #fb2e86;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .btn-success {
+            background-color: #00bfa5;
+        }
+
+        .btn-primary:hover {
+            background-color: #d22672;
+        }
+
+        .btn-success:hover {
+            background-color: #009688;
+        }
+
+        hr {
+            margin: 30px 0;
+            border: none;
+            border-top: 2px solid #eee;
+        }
+    </style>
+
+
+    <div class="container">
+        <!-- Shipping Method Form -->
+        <form action="<?php echo $this->getUrl("*/*/save")?>" method="POST" class="mb-4">
+            <h3>Select Shipping Method</h3>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shipping_type" id="standard" value="standard" checked>
+                    <label class="form-check-label" for="standard">
+                        Standard Delivery (3-5 days,₹200)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shipping_type" id="express" value="express">
+                    <label class="form-check-label" for="express">
+                        Express Delivery (1-2 days,₹300)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shipping_type" id="pickup" value="pickup">
+                    <label class="form-check-label" for="pickup">
+                        Pick-up from Store (₹0)
+                    </label>
+                </div>
+            </div>
+
+            <!-- <button type="submit" class="btn btn-primary">Submit Shipping Method</button> -->
+        <!-- </form> -->
+
+        <hr>
+
+        <!-- Payment Method Form -->
+        <!-- <form action="submit_payment.php" method="POST"> -->
+            <h3>Select Payment Method</h3>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cash on delivery" checked>
+                    <label class="form-check-label" for="cod">
+                        Cash on Delivery (COD)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" id="cod" value="Paypal" checked>
+                    <label class="form-check-label" for="cod">
+                        Online via Paypal 
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit Payment Method</button>
+        </form>
+    </div>

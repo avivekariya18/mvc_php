@@ -1,0 +1,496 @@
+<style>
+    /* Global styles */
+    :root {
+        --primary-color: #ff6b35;
+        --success-color: #72c16c;
+        --text-color: #333333;
+        --light-gray: #f5f5f5;
+        --medium-gray: #e0e0e0;
+        --border-color: #dddddd;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+        color: var(--text-color);
+        background-color: #ffffff;
+        line-height: 1.4;
+        font-size: 14px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Page header */
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    /* Order cards */
+    .order-card {
+        margin-bottom: 24px;
+        border-radius: 4px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .order-header {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) 2fr;
+        padding: 16px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .order-header-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .order-header-label {
+        font-size: 12px;
+        color: #777777;
+        margin-bottom: 4px;
+    }
+
+    .order-header-value {
+        font-weight: 500;
+    }
+
+    .customer-email {
+        color: #0077cc;
+        text-decoration: none;
+    }
+
+    .customer-email:hover {
+        text-decoration: underline;
+    }
+
+    .order-status {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+    }
+
+    .status-badge.success {
+        background-color: rgba(114, 193, 108, 0.15);
+        color: var(--success-color);
+    }
+
+    .status-badge.primary {
+        background-color: rgba(255, 107, 53, 0.15);
+        color: var(--primary-color);
+    }
+
+    .status-badge svg {
+        margin-left: 4px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .arrival-date {
+        font-size: 13px;
+        color: #555555;
+    }
+
+    /* Product details */
+    .product-details {
+        display: flex;
+        padding: 16px;
+        background-color: var(--light-gray);
+    }
+
+    .product-image {
+        width: 120px;
+        height: 120px;
+        background-color: #ffffff;
+        border-radius: 4px;
+        padding: 8px;
+        margin-right: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .product-info {
+        flex: 1;
+    }
+
+    .brand-name {
+        font-size: 12px;
+        color: #555555;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+    .verified-badge {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: #2196f3;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        margin-left: 6px;
+    }
+
+    .product-name {
+        font-weight: 600;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+
+    .product-attributes {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-row-gap: 8px;
+        grid-column-gap: 24px;
+        margin-bottom: 8px;
+    }
+
+    .attribute-item {
+        display: flex;
+    }
+
+    .attribute-label {
+        color: #777777;
+        margin-right: 6px;
+    }
+
+    .attribute-value {
+        font-weight: 500;
+    }
+
+    /* Order summary */
+    .order-summary {
+        padding: 16px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .summary-table tr td {
+        padding: 6px 0;
+    }
+
+    .summary-table tr td:last-child {
+        text-align: right;
+        font-weight: 500;
+    }
+
+    .summary-table tr.total-row td {
+        padding-top: 12px;
+        font-weight: 600;
+    }
+
+    .discount {
+        color: #e53935;
+    }
+
+    /* Tracking progress */
+    .tracking-progress {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        margin-top: 16px;
+        position: relative;
+    }
+
+    .tracking-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .step-text {
+        font-size: 12px;
+        max-width: 120px;
+        color: #555555;
+    }
+
+    .step-date {
+        font-size: 11px;
+        color: #777777;
+        margin-top: 4px;
+    }
+
+    .tracking-line {
+        position: absolute;
+        top: 32px;
+        left: 48px;
+        right: 48px;
+        height: 2px;
+        background-color: #dddddd;
+        z-index: 1;
+    }
+
+    .tracking-progress-bar {
+        position: absolute;
+        top: 32px;
+        left: 48px;
+        width: 50%;
+        height: 2px;
+        background-color: var(--primary-color);
+        z-index: 1;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .order-header {
+            grid-template-columns: 1fr 1fr;
+            grid-row-gap: 16px;
+        }
+
+        .order-status {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
+        }
+
+        .product-attributes {
+            grid-template-columns: 1fr;
+        }
+
+        .tracking-progress {
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .tracking-line,
+        .tracking-progress-bar {
+            display: none;
+        }
+    }
+</style>
+<?php
+
+use PayPal\Api\Refund;
+
+$data = $this->getOrder();
+// echo "<pre>";
+// print_r($data);
+?>
+
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1 class="page-title">Your Orders</h1>
+        </header>
+        <?php
+        foreach ($data as $key => $value):
+            // echo "<pre>";
+            // print_r($value);
+            $products = $this->getProduct($value->getOrderId());
+        ?>
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-header-item">
+                        <span class="order-header-label">Order ID</span>
+                        <span class="order-header-value"><?php echo $value->getOrderId() ?></span>
+                    </div>
+                    <div class="order-header-item">
+                        <span class="order-header-label">Customer ID</span>
+                        <span class="order-header-value"><?php echo $value->getCustomerId() ?></span>
+                    </div>
+                    <div class="order-header-item">
+                        <span class="order-header-label">Email</span>
+                        <a href="mailto:christian.vos95@gmail.com" class="customer-email"><?php echo $value->getEmail() ?></a>
+                    </div>
+                    <div class="order-status">
+                        <div class="status-badge success">
+                            Payment Success
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="status-badge primary">
+                            Packaging
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <span class="arrival-date">Arrive on 6 May, 2024</span>
+                    </div>
+                </div>
+                <?php $total = 0;
+                foreach ($products as $product):
+                    // echo "<pre>";
+                    // print_r($product);
+                    $productD = $this->getproductdetails($product->getProductId());
+                    $total += ($productD->getPrice() * $product->getProductQuantity());
+                    // print_r($productD);
+                ?>
+                    <div class="product-details">
+                        <div class="product-image">
+                            <img src="<?php echo Mage::getBaseUrl() . $productD->getFilePath()['main_image'] ?>" alt="Adidas Campus Unisex Sneakers">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name"><?php echo $productD->getName() ?></h3>
+                            <!-- <div class="brand-name">
+                            adidas originals
+                            <span class="verified-badge">✓</span>
+                        </div> -->
+                            <div class="product-attributes">
+                                <div class="attribute-item">
+                                    <span class="attribute-label">Quantity:</span>
+                                    <span class="attribute-value"><?php echo $product->getProductQuantity() ?></span>
+                                </div>
+                                <div class="attribute-item">
+                                    <span class="attribute-label">Color:</span>
+                                    <span class="attribute-value"><?php echo $productD->getColor() ?></span>
+                                </div>
+                                <div class="attribute-item">
+                                    <span class="attribute-label">Size:</span>
+                                    <span class="attribute-value"><?php echo $productD->getSize() ?></span>
+                                </div>
+                                <div class="attribute-item">
+                                    <span class="attribute-label">Price:</span>
+                                    <span class="attribute-value"><?php echo $productD->getPrice() ?></span>
+                                </div>
+                                <a href="<?php echo $this->getUrl('catalog/product/view') . '/?product_id=' . $product->getProductId() ?>">view product</a>
+                                <!-- <a href="#">cancel order</a> -->
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            </div>
+
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-header-item">
+                        <span class="order-header-label">Order ID</span>
+                        <span class="order-header-value"><?php echo $value->getOrderId() ?></span>
+                    </div>
+                    <div class="order-header-item">
+                        <span class="order-header-label">Customer ID</span>
+                        <span class="order-header-value"><?php echo $value->getCustomerId() ?></span>
+                    </div>
+                    <div class="order-header-item">
+                        <span class="order-header-label">Email</span>
+                        <a href="mailto:christian.vos95@gmail.com" class="customer-email"><?php echo $value->getEmail() ?></a>
+                    </div>
+                    <div class="order-status">
+                        <div class="status-badge success">
+                            Payment Success
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="status-badge primary">
+                            On Deliver
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <span class="arrival-date">Arrive on 2 May, 2024</span>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <table class="summary-table">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td><?php echo $total . '.00' ?></td>
+                        </tr>
+                        <tr>
+                            <td>Discount</td>
+                            <td class="discount"><?php echo '-' . $value->getCouponDiscount() ?></td>
+                        </tr>
+                        <tr>
+                            <td>Shipping cost</td>
+                            <td><?php echo $value->getShippingAmount() ?></td>
+                        </tr>
+                        <!-- <tr>
+                        <td>Tax (8%)</td>
+                        <td>332.18 PLN</td>
+                    </tr> -->
+                        <tr class="total-row">
+                            <td>Total</td>
+                            <td><?php echo $value->getTotalAmount() ?></td>
+                        </tr>
+                    </table>
+                    <?php if ($this->getorderpaymentstatus($value->getOrderId()) != 'refund'): ?>
+                        <a href="<?php echo $this->getUrl('sale/payment/refund') . '/?order_id=' . $value->getOrderId() ?>">cancel order</a>
+                    <?php endif ?>
+                </div>
+
+                <div class="tracking-progress">
+                    <div class="tracking-line"></div>
+                    <div class="tracking-progress-bar"></div>
+
+                    <div class="tracking-step">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">Packed</div>
+                        <div class="step-date">(on 30 April, 2024)</div>
+                    </div>
+
+                    <div class="tracking-step">
+                        <div class="step-icon">✓</div>
+                        <div class="step-text">In Delivering</div>
+                        <div class="step-date">(on 1 May, 2024 - 4 May, 2024)</div>
+                    </div>
+
+                    <div class="tracking-step">
+                        <div class="step-icon">→</div>
+                        <div class="step-text">Międzynarodowa 64, Warsaw</div>
+                        <div class="step-date">(on 5 May, 2024)</div>
+                    </div>
+                </div>
+
+            </div>
+            <hr>
+        <?php endforeach ?>
+    </div>
+</body>

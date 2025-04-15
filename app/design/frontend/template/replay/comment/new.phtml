@@ -1,0 +1,114 @@
+<style>
+    .comment-box {
+        margin-left: 20px;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-left: 2px dashed #0d6efd;
+        border-radius: 5px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+
+    .replies {
+        margin-top: 10px;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+</style>
+
+
+<div id="question" class="container bg-white p-4 rounded shadow-sm">
+    <h5>Comments</h5>
+    <button class="btn btn-primary btn-sm" onclick="addComment(this)">Add Comment</button>
+    <button class="btn btn-success btn-sm" onclick="saveCommentToDatabase(this)">Save Button</button>
+    <div class="replies mt-3"></div>
+</div>
+
+<script>
+    function addComment(button) {
+        const inputContainer = document.createElement("tr");
+        inputContainer.className = "comment-box";
+
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "Write your comment...";
+        textarea.className = "form-control mb-2";
+        textarea.rows = 3;
+
+        // const postButton = document.createElement("button");
+        // postButton.textContent = "Post";
+        // postButton.className = "btn btn-success btn-sm me-2";
+
+        // postButton.onclick = () => {
+        //     const text = textarea.value.trim();
+        //     if (text === "") return;
+
+        //     const commentContainer = document.createElement("tr");
+        //     commentContainer.className = "comment-box";
+
+        //     const commentText = document.createElement("p");
+        //     commentText.textContent = text;
+        //     commentText.className = "mb-1";
+
+        //     const addReplyBtn = document.createElement("button");
+        //     addReplyBtn.style.display = "none";
+        //     addReplyBtn.textContent = "+ Add Reply";
+        //     addReplyBtn.className = "btn btn-outline-primary btn-sm me-2";
+        //     addReplyBtn.onclick = function() {
+        //         addComment(this);
+        //     };
+        //     //const replies = this.parentElement.querySelector(".replies");
+            const saveBtn = document.createElement("button");
+            saveBtn.style.display = "none";
+            saveBtn.textContent = "Save";
+            saveBtn.className = "btn btn-outline-success btn-sm";
+            saveBtn.onclick = function() {
+                saveCommentToDatabase(this); // this function will handle saving
+                saveBtn.disabled = true;
+                saveBtn.textContent = "Saved ✔️";
+            };
+
+        //     const repliesDiv = document.createElement("td");
+        //     repliesDiv.className = "replies";
+
+        //     commentContainer.appendChild(commentText);
+        //     commentContainer.appendChild(addReplyBtn);
+        //     commentContainer.appendChild(saveBtn);
+        //     commentContainer.appendChild(repliesDiv);
+
+        //     inputContainer.replaceWith(commentContainer);
+        // };
+
+        inputContainer.appendChild(textarea);
+        // inputContainer.appendChild(postButton);
+
+        const replies = button.parentElement.querySelector(".replies");
+        replies.appendChild(inputContainer);
+    }
+
+    function saveCommentToDatabase(commentText) {
+        // This is a simulation. Replace with fetch() to your PHP or API.
+        let savearea = commentText.parentElement.querySelector(".replies");
+        savearea.querySelectorAll('button').forEach(btn=>btn.style.display = "inline-block");
+        // saveButton;
+        console.log("Saving comment to database:", savearea);
+
+        // Example: sending to a PHP file
+        /*
+        fetch('save_comment.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({ comment: commentText })
+        })
+        .then(response => response.text())
+        .then(result => {
+          console.log("Server response:", result);
+        });
+        */
+    }
+</script>

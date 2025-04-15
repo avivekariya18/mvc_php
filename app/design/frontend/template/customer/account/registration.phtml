@@ -1,0 +1,316 @@
+<div class="registration-container">
+    <h2 class="registration-title">Create an Account</h2>
+    <p class="registration-description">Please fill out the information below to register</p>
+
+    <form class="registration-form" action="<?php echo $this->getUrl("*/*/registerCustomer") ?>" method="POST">
+        <div class="form-section">
+            <h3 class="section-title">Personal Information</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" id="first_name" name="customer[first_name]" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" id="last_name" name="customer[last_name]" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="customer[email]" class="form-input" placeholder="name@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="customer[password]" class="form-input" required>
+                    <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                        <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                <div class="password-hint">Password should be at least 8 characters with letters, numbers & symbols</div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="tel" id="contact" name="customer[phone]" class="form-input" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="section-title">Address Information</h3>
+
+            <div class="form-group">
+                <label for="street" class="form-label">Street Address</label>
+                <input type="text" id="street" name="customer[street]" class="form-input" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" id="city" name="customer[city]" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="state" class="form-label">State/Province</label>
+                    <input type="text" id="state" name="customer[state]" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" id="country" name="customer[country]" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="zipcode" class="form-label">Zip/Postal Code</label>
+                    <input type="text" id="zipcode" name="customer[zip_code]" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="telephone" class="form-label">Telephone</label>
+                <input type="tel" id="telephone" name="customer[phone_number]" class="form-input" required>
+            </div>
+
+            <div class="form-group radio-group">
+                <label class="form-label">Address Type</label>
+                <div class="radio-options">
+                    <label class="radio-label">
+                        <input type="radio" name="customer[address_type]" value="home" required>
+                        <span class="radio-text">Home</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="customer[address_type]" value="office">
+                        <span class="radio-text">Office</span>
+                    </label>
+                </div>
+            </div>
+
+            <input type="hidden" name="customer[default_address]" value="1">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="registration-button">Create Account</button>
+        </div>
+
+        <div class="login-link">
+            Already have an account? <a href="<?php echo $this->getUrl("customer/account/login") ?>">Sign in</a>
+        </div>
+    </form>
+</div>
+<style>
+    .registration-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    .registration-title {
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+    }
+
+    .registration-description {
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        color: #666;
+        text-align: center;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .section-title {
+        margin: 0 0 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #444;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #444;
+    }
+
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrapper .form-input {
+        padding-right: 2.5rem;
+    }
+
+    .form-input:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+        outline: none;
+    }
+
+    .form-input::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        padding: 0.25rem;
+    }
+
+    .toggle-password:hover {
+        color: #555;
+    }
+
+    .password-hint {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: #777;
+    }
+
+    .radio-group {
+        margin-top: 1rem;
+    }
+
+    .radio-options {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .radio-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .radio-label input[type="radio"] {
+        margin-right: 0.5rem;
+        cursor: pointer;
+    }
+
+    .radio-text {
+        font-size: 0.95rem;
+        color: #444;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+    }
+
+    .registration-button {
+        display: block;
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .registration-button:hover {
+        background-color: #3a80d2;
+    }
+
+    .registration-button:active {
+        transform: translateY(1px);
+    }
+
+    .login-link {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .login-link a {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+        .form-row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .registration-container {
+            padding: 1.5rem;
+        }
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePasswordButton = document.querySelector('.toggle-password');
+        const passwordInput = document.getElementById('password');
+
+        togglePasswordButton.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Update the eye icon
+            const eyeIcon = this.querySelector('svg');
+            if (type === 'text') {
+                eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            } else {
+                eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+            }
+        });
+    });
+</script>

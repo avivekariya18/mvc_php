@@ -1,0 +1,175 @@
+<style>
+       
+
+        .container {
+            max-width: 900px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h4 {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: #fafafa;
+        }
+
+        .btn-primary {
+            background-color: #fb2e86;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 18px;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #d22672;
+        }
+    </style>
+
+
+    <div class="container">
+        <h2 class="text-center mb-4">Billing and Shipping Details</h2>
+
+        <form action="<?php echo $this->getUrl("*/*/saveAddress")?>" method="POST">
+            <!-- Personal Details -->
+            <div class="form-section">
+                <h4>Personal Information</h4>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="personal[fname]" placeholder="First name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="personal[lname]" placeholder="Last name" required>
+                    </div>
+                </div>
+                <h1>qwrt</h1>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email ID</label>
+                        <input type="email" class="validate-email" id="email" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="personal[phone]" placeholder="Phone number" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing Address -->
+            <div class="form-section">
+                <h4>Billing Address</h4>
+
+                <div class="mb-3">
+                    <label for="billing_street" class="form-label">Street Address</label>
+                    <input type="text" class="form-control" id="billing_street" name="billing[street]" placeholder="Street address" required>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="billing_city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="billing_city" name="billing[city]" placeholder="City" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="billing_region" class="form-label">Region (State)</label>
+                        <input type="text" class="form-control" id="billing_region" name="billing[region]" placeholder="State" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="billing_country" class="form-label">Country</label>
+                        <select class="form-select" id="billing_country" name="billing[country]" required>
+                            <option selected disabled>Select country</option>
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                            <option value="Canada">Canada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="billing_zipcode" class="form-label">Zip Code</label>
+                        <input type="text" class="form-control" id="billing_zipcode" name="billing[zipcode]" placeholder="Zip code" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="form-section">
+                <h4>Shipping Address</h4>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="same_as_billing" onclick="copyBilling()">
+                    <label class="form-check-label" for="same_as_billing">Same as Billing Address</label>
+                </div>
+
+                <div class="mb-3">
+                    <label for="shipping_street" class="form-label">Street Address</label>
+                    <input type="text" class="form-control" id="shipping_street" name="shipping[street]" placeholder="Street address" required>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="shipping_city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="shipping_city" name="shipping[city]" placeholder="City" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="shipping_region" class="form-label">Region (State)</label>
+                        <input type="text" class="form-control" id="shipping_region" name="shipping[region]" placeholder="State" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="shipping_country" class="form-label">Country</label>
+                        <select class="form-select" id="shipping_country" name="shipping[country]" required>
+                            <option selected disabled>Select country</option>
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                            <option value="Canada">Canada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="shipping_zipcode" class="form-label">Zip Code</label>
+                        <input type="text" class="form-control" id="shipping_zipcode" name="shipping[zipcode]" placeholder="Zip code" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+        </form>
+    </div>
+
+    <script>
+        function copyBilling() {
+            if (document.getElementById('same_as_billing').checked) {
+                document.getElementById('shipping_street').value = document.getElementById('billing_street').value;
+                document.getElementById('shipping_city').value = document.getElementById('billing_city').value;
+                document.getElementById('shipping_region').value = document.getElementById('billing_region').value;
+                document.getElementById('shipping_country').value = document.getElementById('billing_country').value;
+                document.getElementById('shipping_zipcode').value = document.getElementById('billing_zipcode').value;
+            } else {
+                document.getElementById('shipping_street').value = "";
+                document.getElementById('shipping_city').value = "";
+                document.getElementById('shipping_region').value = "";
+                document.getElementById('shipping_country').value = "";
+                document.getElementById('shipping_zipcode').value = "";
+            }
+        }
+    </script>
+
+

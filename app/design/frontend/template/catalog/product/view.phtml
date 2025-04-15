@@ -1,0 +1,180 @@
+<?php $productData = $this->getOneProduct();
+
+$attributeData = $this->getAttribute();
+
+// echo "<pre>";
+// print_r($productData);
+// print_r($attributeData);
+// echo "</pre>";
+$url = Mage::getBaseUrl();
+?>
+<style>
+    .product-img {
+        width: 100%;
+        max-height: 450px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .thumbnail:hover {
+        border-color: #d10063;
+    }
+
+
+    .size-btn {
+        border: 1px solid #ccc;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+
+    .size-btn:hover,
+    .size-btn.active {
+        border-color: #D10063;
+    }
+
+    .price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .btn-cart,
+    .btn-buy {
+        width: 48%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    .btn-cart {
+        background-color: #f8f9fa;
+        border: 1px solid #D10063;
+    }
+
+    .btn-cart:hover {
+        background-color: #d10063 !important;
+        color: white !important;
+
+    }
+
+
+    .btn-buy {
+        background-color: #D10063;
+        color: #fff;
+    }
+
+    .btn-buy:hover {
+        background-color: white !important;
+        color: #d10063 !important;
+        border: 1px solid #d10063;
+    }
+</style>
+
+<div class="container m-4">
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6">
+            <!-- Main Product Image -->
+            <img id="mainImage" src="<?php echo $url . $productData->getFilePath()['main_image']; ?>" alt="Product Image" class="product-img mb-3 ">
+
+            <!-- Thumbnails -->
+            <div class="d-flex" id="thumbnails">
+                <?php foreach ($productData->getFilePath() as $key => $filePath): ?>
+                    <?php if ($key === 'main_image') continue; // Skip the main image 
+                    ?>
+                    <img src="<?php echo $url . $filePath; ?>" alt="Thumbnail" class="thumbnail me-2" onclick="swapImage(this)">
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <h2><?php echo $productData->getName(); ?></h2>
+            <p class="price"><?php echo $productData->getPrice(); ?> onwards</p>
+            <!-- <p><strong>Rating:</strong> ⭐ 4.0 (37,585 Ratings, 10,837 Reviews)</p>
+            <p><strong>Free Delivery</strong></p> -->
+
+            <!-- Size Selection -->
+            <!-- <h5 class="my-3">Select Size:</h5>
+            <div class="mb-3">
+                <span class=" size-btn">XXS ₹103</span>
+                <span class="size-btn">XS ₹169</span>
+                <span class="size-btn">S ₹165</span>
+                <span class="size-btn">M ₹169</span>
+                <span class="size-btn">L ₹169</span>
+                <span class="size-btn">XL ₹169</span>
+            </div> -->
+
+            <!-- Product Details -->
+            <h5>Product details:</h5>
+            <table class="table table-bordered">
+                <tbody>
+                    <?php foreach ($attributeData as $attr): ?>
+                        <?php $fn = "get" . str_replace("_", "", ucwords($attr->getName(), "_")); ?>
+                        <?php if (!empty($productData->$fn())): ?>
+                            <tr>
+                                <th><?php echo $attr->getName(); ?></th>
+                                <td><?php echo $productData->$fn(); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <!-- Buttons -->
+            <form id="cart-form">
+                <input type="hidden" name="cart[product_id]" value="<?php echo $productData->getProductId() ?>" />
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="cart[quantity]" value="1" min="1" class="form-control" style="width: 100px; margin-bottom: 10px;" />
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-cart">Add to Cart</button>
+                    <button type="submit" formaction="checkout/cart/buyNowAction" class="btn btn-buy">Buy Now</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function swapImage(thumbnail) {
+        const mainImage = document.getElementById('mainImage');
+        const tempSrc = mainImage.src;
+
+        // Swap the main image and thumbnail src
+        mainImage.src = thumbnail.src;
+        thumbnail.src = tempSrc;
+    }
+    $(document).ready(function(){
+        $('#cart-form').submit(function(event){
+            event.preventDefault();
+            const formdata = $(this).serialize();
+            $.ajax({
+                url:"http://localhost/mvc_new/checkout/cart/add",
+                type:'POST',
+                data: formdata,
+                success:function(response){
+                    alert("add to card done");
+                },
+                error:function(xhr,status,error){
+                    console.error('Error:',error);
+                    alert('failed');
+                }
+
+            })
+        })
+    })
+</script>

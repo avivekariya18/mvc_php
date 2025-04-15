@@ -1,0 +1,181 @@
+<?php $data = $this->getAllTicket();
+//echo '<pre>';
+//print_r($data);
+?>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background-color: #f8f8f8;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #111;
+    }
+
+    .ticket-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .ticket-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        width: 100%;
+        max-width: 450px;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Style for the form and button container */
+    .ticket-container form {
+        width: 100%;
+        max-width: 450px;
+        margin: 0;
+    }
+
+    .ticket-container form button {
+        width: 100%;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .add-ticket-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        border: 1px dashed #ccc;
+        color: #666;
+        transition: background-color 0.2s;
+    }
+
+    .add-ticket-card:hover {
+        background-color: #f9f9f9;
+    }
+
+    .add-icon {
+        font-size: 40px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    .add-text {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .ticket-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .ticket-details {
+        margin-bottom: 20px;
+        line-height: 1.5;
+        white-space: pre-line;
+        /* Preserves line breaks in details */
+    }
+
+    .ticket-phone {
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .btn-edit {
+        background-color: #f0f0f0;
+        color: #333;
+    }
+
+    .btn-remove {
+        background-color: #f0f0f0;
+        color: #d9534f;
+    }
+
+    .btn-default {
+        background-color: #f0f0f0;
+        color: #5cb85c;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .ticket-container {
+            justify-content: center;
+        }
+
+        .ticket-card {
+            max-width: 100%;
+        }
+    }
+</style>
+
+
+<h1>Your Tickets</h1>
+
+<div class="ticket-container">
+    <!-- Add Ticket Card -->
+    <button><a href="<?php echo $this->getUrl('admin/replay_Index/new') ?>">
+            <div class="ticket-card add-ticket-card">
+                <div class="add-icon">+</div>
+                <div class="add-text">Add ticket</div>
+            </div>
+        </a>
+    </button>
+
+    <!-- Loop through existing tickets -->
+    <?php foreach ($data as $ticket): ?>
+        <a href="<?php echo $this->getUrl('admin/replay_Index/comment').'/?ticket_id='.$ticket->getTicketId() ?>">
+            <div class="ticket-card">
+                <div class="ticket-title"><?php echo $ticket->getTicketId() ?> . <?php echo $ticket->getTitle() ?></div>
+
+                <div class="ticket-phone">
+                    Date : <?php echo $ticket->getCreatedAt(); // Assuming you have this method 
+                            ?>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-edit">Edit</button>
+                    <button class="btn btn-remove">Remove</button>
+                    <button class="btn btn-default">Set as Default</button>
+                </div>
+            </div>
+        </a>
+
+    <?php endforeach ?>
+</div>

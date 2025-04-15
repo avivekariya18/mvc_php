@@ -1,0 +1,77 @@
+<style>
+    table,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    td {
+        padding: 8px;
+        vertical-align: top;
+        min-width: 150px;
+    }
+
+    .input-container {
+        display: flex;
+        gap: 6px;
+        margin-top: 5px;
+    }
+
+    .control-panel {
+        margin-bottom: 15px;
+    }
+</style>
+
+<?php
+$ticket = $this->getTicket();
+$tableArray = $this->dataArray();
+$tree = $this->buildTree($tableArray);
+echo $this->render($tree, $ticket);
+?>
+
+<button onclick="save()">saveAll</button>
+<span id="tId" hidden><?php echo $this->getId() ?></span>
+
+
+<script defer>
+    function openTextbox() {
+        const td = event.target.closest("td");
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Enter comment";
+        td.appendChild(document.createElement("br"));
+        td.appendChild(input);
+    }
+
+    function save() {
+        let input = document.querySelectorAll('input');
+        input.forEach((i) => {
+            text = i.value;
+            parent = i.parentElement.previousElementSibling.querySelector('span').textContent;
+            tId = document.getElementById('tId').textContent;
+            ajaxCall(tId, text, parent)
+        })
+    }
+
+    function ajaxCall(tid, cmt, pnid) {
+        $.ajax({
+            url: "http://localhost/mvc_new/admin/replay_index/commentsave",
+            type: 'post',
+            data: {
+                comment: cmt,
+                parent_id: pnid,
+                ticket_id: tid
+            },
+            success: function(res) {
+                window.location.reload();
+            },
+            error: function(err) {
+                console.log(err);
+            },
+        });
+    }
+    function complited(button){
+        $(button).prev().prev().hide();
+        $(button).hide();
+    }
+</script>

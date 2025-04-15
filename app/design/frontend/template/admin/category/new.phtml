@@ -1,0 +1,118 @@
+<?php
+$categoryData = $this->getCategoryData();
+$data = is_array($categoryData) ? $categoryData[0] : $categoryData;
+// echo "<pre>";
+// print_r($data);
+?>
+<style>
+    /* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 20px;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+h2 {
+    color: #0069d1;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #0069d1;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0069d1;
+    box-shadow: 0px 0px 5px rgba(0, 105, 209, 0.5);
+    outline: none;
+}
+
+.btn-prim {
+    background: #0069d1;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.btn-prim:hover {
+    background: #0050a0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+</style>
+<?php // echo $data->getCategoryId(); ?>
+<div class="container w-50">
+    <h2 class="text-center mb-4" style="color:rgb(0, 105, 209);">Add Category</h2>
+
+    <form method="post" class="m-3" enctype="multipart/form-data" action="<?php echo $this->getUrl("*/*/save") ?>">
+    
+
+        <!-- Hidden Category ID -->
+    <input type="hidden" id="id" name="catalog_category[category_id]"  value="<?php echo $data->getCategoryId(); ?>"required>
+           
+    <!-- Category Name -->
+    <div class="mb-3">
+            <label for="categoryName" class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="categoryName" name="catalog_category[name]"  value="<?php echo $data->getName(); ?>"placeholder="Enter category name" required>
+        </div>
+        <!-- Category Description -->
+        <div class="mb-3">
+            <label for="categoryDescription" class="form-label">Category Description</label>
+            <textarea class="form-control" id="categoryDescription" name="catalog_category[description]" rows="3" placeholder="Enter category description"><?php echo $data->getDescription(); ?></textarea>
+        </div>
+
+        <!-- Parent Category Name -->
+        <div class="mb-3">
+            <label for="parentCategory" class="form-label">Parent Category Name</label>
+            <select class="form-select" id="parentCategory" name="catalog_category[parent_id]" required>
+                <option value="" disabled selected>Select Parent Category</option>
+                <?php
+                $selectedCategoryId = $data->getparentId(); // Get the currently selected parent_id
+                foreach ($this->cat_data as $catdata):
+                    $categoryId = $catdata->getcategoryId(); // Ensure you're fetching the correct category ID
+                    $categoryName = $catdata->getName(); // Get category name
+                    $selected = ($categoryId == $selectedCategoryId) ? 'selected' : ''; // Compare with selected parent_id
+                ?>
+                    <option value="<?php echo htmlspecialchars($categoryId); ?>" <?php echo $selected; ?>>
+                        <?php echo htmlspecialchars($categoryName); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-prim w-100"><?php echo $data->getCategoryId()?"Edit Category":"Add Category";?></button>
+    </form>
+</div>

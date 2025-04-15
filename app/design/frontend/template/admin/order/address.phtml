@@ -1,0 +1,25 @@
+<?php
+// address.phtml - Updated with proper styling
+$order_address = $this->getAddress();
+?>
+
+<div class="section order-addresses">
+    <h3>Shipping & Billing Information</h3>
+    
+    <div class="address-container">
+        <?php foreach ($order_address as $_order_address): ?>
+            <div class="address-section">
+                <h3><?php echo $_order_address->getAddressType(); ?> Address</h3>
+                <div class="address-info">
+                    <p><strong>Contact Name:</strong> <?php echo $_order_address->getFname() . ' ' . $_order_address->getLname(); ?></p>
+                    <p><strong>Street:</strong> <?php echo $_order_address->getStreet(); ?></p>
+                    <p><strong>City:</strong> <?php echo $_order_address->getCity(); ?></p>
+                    <p><strong>State:</strong> <?php echo $_order_address->getRegion(); ?></p>
+                    <p><strong>Country:</strong> <?php echo $_order_address->getCountry(); ?></p>
+                    <p><strong>Zip Code:</strong> <?php echo $_order_address->getZipcode(); ?></p>
+                    <p><strong>Mobile:</strong> <?php echo $_order_address->getPhone(); ?></p>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

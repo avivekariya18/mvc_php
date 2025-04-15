@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Display System</title>
+    <style>
+        /* Modern reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Message container styling */
+        .message-container {
+            max-width: 550px;
+            margin: 15px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .message-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        /* Individual message styling */
+        .message {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 15px;
+            animation: fadeInUp 0.4s ease forwards;
+            position: relative;
+        }
+        
+        /* Message types */
+        .message-success {
+            background-color: #f0f9f0;
+            border-left: 5px solid #4CAF50;
+            color: #2E7D32;
+        }
+        
+        .message-warning {
+            background-color: #fffbf0;
+            border-left: 5px solid #FF9800;
+            color: #E65100;
+        }
+        
+        .message-error {
+            background-color: #fff5f5;
+            border-left: 5px solid #F44336;
+            color: #C62828;
+        }
+        
+        /* Icon styling */
+        .message-icon {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        /* Text styling */
+        .message-text {
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .message-container {
+                max-width: 100%;
+            }
+            
+            .message {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <?php
+    // Your existing message retrieval code
+    $success_msg = $this->getModel()->getMessage("success");
+    $error_msg = $this->getModel()->getMessage("error");
+    $warning_msg = $this->getModel()->getMessage("warning");
+    ?>
+    
+    <?php if (!empty($success_msg)): ?>
+        <div class="message-container">
+            <div class="message message-success">
+                <div class="message-icon">✅</div>
+                <div class="message-text"><?php echo htmlspecialchars($success_msg); ?></div>
+            </div>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (!empty($warning_msg)): ?>
+        <div class="message-container">
+            <div class="message message-warning">
+                <div class="message-icon">⚠️</div>
+                <div class="message-text"><?php echo htmlspecialchars($warning_msg); ?></div>
+            </div>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (!empty($error_msg)): ?>
+        <div class="message-container">
+            <div class="message message-error">
+                <div class="message-icon">❌</div>
+                <div class="message-text"><?php echo htmlspecialchars($error_msg); ?></div>
+            </div>
+        </div>
+    <?php endif; ?>
+</body>
+</html>

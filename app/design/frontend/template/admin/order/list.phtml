@@ -1,0 +1,128 @@
+<?php
+$order_data = $this->getOrderData();
+?>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+    .order-container {
+        width: 90%;
+        max-width: 1200px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .order-heading {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .order-table thead {
+        background-color: #007BFF;
+        color: #fff;
+    }
+    .order-table th, .order-table td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    .order-table tr:hover {
+        background-color: #f1f1f1;
+    }
+    .view-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 6px 12px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+    .view-btn:hover {
+        background-color: #218838;
+    }
+    .status-dropdown {
+        width: 150px;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+    @media (max-width: 768px) {
+        .order-table th, .order-table td {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<body>
+<?php $this->getChildHtml('');?> 
+<div class="order-container">
+        <button class="export-container">
+            <a href="<?php echo $this->getUrl('*/*/exportCsv'); ?>" class="export-btn">Export to CSV</a>
+        </button>
+        <br>
+        <h2 class="order-heading">Order List</h2>
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Order Number</th>
+                    <th>Customer Id</th>
+                    <th>Total Amount</th>
+                    <th>Email</th>
+                    <th>Order Status</th>
+                    <th>Shipping Method</th>
+                    <th>Payment Method</th>
+                    <th>View Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($order_data as $_order): ?>
+                    <tr>
+                        <td><?php echo $_order->getOrderId(); ?></td>
+                        <td><?php echo $_order->getOrderNumber(); ?></td>
+                        <td><?php echo $_order->getCustomerId(); ?></td>
+                        <td><?php echo $_order->getTotalAmount(); ?></td>
+                        <td><?php echo $_order->getEmail(); ?></td>
+                        <td>
+                            <form method="POST" action="<?php echo $this->getUrl("*/*/updateStatus"); ?>">
+                            <select  name="order_status" class="status-dropdown">
+                            
+                                    <option value="pending" <?php echo $_order->getOrderStatus() == 'pending' ? 'selected' : ''; ?>>Pending</option>
+                                    <option value="shipped" <?php echo $_order->getOrderStatus() == 'shipped' ? 'selected' : ''; ?>>Shipped</option>
+                                    <option value="delivered" <?php echo $_order->getOrderStatus() == 'delivered' ? 'selected' : ''; ?>>Delivered</option>
+                                    <option value="cancelled" <?php echo $_order->getOrderStatus() == 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                                <input type="hidden" name="order_id" value="<?php echo $_order->getOrderId(); ?>" />
+                                <button type="submit" class="view-btn">Update</button>
+                            </form>
+                        </td>
+                        <td><?php echo $_order->getShippingMethod(); ?></td>
+                        <td><?php echo $_order->getPaymentMethod(); ?></td>
+                        <td><a href="<?php echo $this->getUrl("*/*/view")?>/?order_id=<?php echo $_order->getOrderId();?>"
+                               class="view-btn">View</a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

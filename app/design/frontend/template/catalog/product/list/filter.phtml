@@ -1,0 +1,253 @@
+<?php $filter = $this->getFilterData();
+$categories = $this->getCategory();
+?>
+<style>
+    
+</style>
+<aside class="col-md-3">
+    <form id="filter-form" method="GET">
+        <input type="hidden" name="category_id" value="<?php echo isset($_GET['category_id']) ? htmlspecialchars($_GET['category_id']) : ''; ?>">
+        <div class="row">
+            <h4>Filters</h4>
+            <label for="category">Category:</label>
+            <?php $selectedCategories = isset($_GET['category_id']) ? explode(',', $_GET['category_id']) : []; ?>
+            <?php foreach ($categories as $category): ?>
+                <div class="">
+                    <input type="checkbox"
+                        name="category_id[]"
+                        value="<?php echo htmlspecialchars($category->getCategoryId()); ?>"
+                        class="form-check-input checkbox"
+                        id="category-<?php echo htmlspecialchars($category->getCategoryId()); ?>"
+                        <?php echo in_array($category->getCategoryId(), $selectedCategories) ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="category-<?php echo htmlspecialchars($category->getCategoryId()); ?>">
+                        <?php echo htmlspecialchars($category->getName()); ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+        <!-- </div> -->
+        <?php
+        // Build unique, non-empty color and brand arrays.
+        $colors = [];
+        $shaps = [];
+        $Materials = [];
+        foreach ($filter as $detail) {
+            $color = $detail->getColor();
+            if (!empty($color) && !in_array(strtolower($color), $colors)) {
+                $colors[] = strtolower($color);
+            }
+            $shap = $detail->getSize();
+            if (!empty($shap) && !in_array(strtolower($shap), $shaps)) {
+                $shaps[] = strtolower($shap);
+            }
+            $Material = $detail->getSize();
+            if (!empty($Material) && !in_array(strtolower($Material), $Materials)) {
+                $Materials[] = strtolower($Material);
+            }
+        }
+        ?>
+
+        <!-- Size Filter -->
+        <!-- <div class="form-group mb-3"> -->
+            <label for="size">Shap:</label>
+            <div>
+                <?php foreach ($shaps as $size): ?>
+                    <div class="form-check">
+                        <input type="checkbox"
+                            name="size[]"
+                            id="size_<?php echo htmlspecialchars($size); ?>"
+                            value="<?php echo htmlspecialchars($size); ?>"
+                            class="form-check-input checkbox"
+                            <?php echo in_array($size, $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="size_<?php echo htmlspecialchars($size); ?>">
+                            <?php echo htmlspecialchars($size); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <!-- </div> -->
+
+        <!-- Color Filter -->
+        <!-- <div class="form-group mb-3"> -->
+            <label>Color:</label>
+            <div>
+                <?php foreach ($colors as $color): ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input checkbox"
+                            name="color[]"
+                            value="<?php echo htmlspecialchars($color); ?>"
+                            id="color_<?php echo htmlspecialchars($color); ?>"
+                            <?php echo in_array($color, $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label"
+                            for="color_<?php echo htmlspecialchars($color); ?>">
+                            <?php echo htmlspecialchars($color); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <!-- </div> -->
+
+        <!-- Price Filter -->
+        <!-- <div class="form-group mb-3"> -->
+            <label>Price Range:</label>
+            <div>
+                <?php
+                $priceRanges = [
+                    '1-500' => '₹1 - ₹500',
+                    '500-1000' => '₹500 - ₹1000',
+                    '1000-5000' => '₹1000 - ₹5000',
+                    '5000-10000' => '₹5000 - ₹10000',
+                    '10000-20000' => '₹10000 - ₹20000',
+                    '20000' => "₹20000 above",
+                    'Under-10000' => "Under ₹10000"
+                ];
+                $selectedPrice = isset($_GET['price']) ? $_GET['price'] : '';
+                ?>
+                <?php foreach ($priceRanges as $range => $label): ?>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input"
+                            name="price"
+                            value="<?php echo htmlspecialchars($range); ?>"
+                            id="price_<?php echo htmlspecialchars($range); ?>"
+                            <?php echo $range === $selectedPrice ? 'checked' : ''; ?>>
+                        <label class="form-check-label"
+                            for="price_<?php echo htmlspecialchars($range); ?>">
+                            <?php echo htmlspecialchars($label); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <!-- </div> -->
+
+
+        <!-- Material Filter -->
+        <!-- <div class="form-group mb-3"> -->
+            <label>Material:</label>
+            <div>
+                <?php foreach ($Materials as $material): ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input checkbox"
+                            name="material[]"
+                            value="<?php echo htmlspecialchars($material); ?>"
+                            id="material_<?php echo htmlspecialchars($material); ?>"
+                            <?php echo in_array($material, $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label"
+                            for="material_<?php echo htmlspecialchars($material); ?>">
+                            <?php echo htmlspecialchars($material); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+    </form>
+</aside>
+
+<script>
+    // // Add event listeners to checkboxes for filtering
+    // document.querySelectorAll('input[name="category_id[]"], input[name="size[]"], input[name="material[]"], input[name="color[]"]').forEach(checkbox => {
+    //     checkbox.addEventListener('change', function() {
+    //         applyFilter();
+    //     });
+    // });
+
+    // // Main filter function
+    // // Add event listeners to checkboxes and radio buttons for filtering
+    // document.querySelectorAll('input[name="category_id[]"], input[name="size[]"], input[name="material[]"], input[name="color[]"], input[name="price"]').forEach(input => {
+    //     input.addEventListener('change', function() {
+    //         applyFilter();
+    //     });
+    // });
+
+    // // Main filter function
+    // function applyFilter() {
+    //     const selectedCategories = Array.from(document.querySelectorAll('input[name="category_id[]"]:checked')).map(cb => cb.value);
+    //     const selectedSize = Array.from(document.querySelectorAll('input[name="size[]"]:checked')).map(cb => cb.value);
+    //     const selectedMaterial = Array.from(document.querySelectorAll('input[name="material[]"]:checked')).map(cb => cb.value);
+    //     const selectedColor = Array.from(document.querySelectorAll('input[name="color[]"]:checked')).map(cb => cb.value);
+    //     const selectedPrice = document.querySelector('input[name="price"]:checked')?.value;
+
+    //     // Build query parameters dynamically
+    //     const params = new URLSearchParams();
+    //     if (selectedCategories.length) params.append('category_id', selectedCategories.join(','));
+    //     if (selectedSize.length) params.append('size', selectedSize.join(','));
+    //     if (selectedMaterial.length) params.append('material', selectedMaterial.join(','));
+    //     if (selectedColor.length) params.append('color', selectedColor.join(','));
+    //     if (selectedPrice) params.append('price', selectedPrice);
+
+    //     // Update the URL without empty filters
+    //     const newUrl = `${window.location.pathname}?${params.toString()}`;
+    //     window.history.pushState({
+    //         path: newUrl
+    //     }, '', newUrl);
+
+    //     // Send AJAX request
+    //     fetch(newUrl, {
+    //             method: 'GET'
+    //         })
+    //         .then(response => response.text())
+    //         .then(data => {
+    //             document.getElementById('product-list').innerHTML = data; // Update product list
+
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // }
+
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     document.getElementById('filter-form').addEventListener('submit', function(e) {
+    //         e.preventDefault();
+
+    //         const form = new FormData(this);
+    //         const params = new URLSearchParams();
+
+    //         // Collect selected categories into a single comma-separated string
+    //         const selectedCategories = [];
+    //         document.querySelectorAll('input[name="category_id[]"]:checked').forEach(checkbox => {
+    //             selectedCategories.push(checkbox.value);
+    //         });
+
+    //         if (selectedCategories.length > 0) {
+    //             params.append('category_id', selectedCategories.join(','));
+    //         }
+
+    //         // Collect selected sizes
+    //         const selectedSizes = [];
+    //         document.querySelectorAll('input[name="size[]"]:checked').forEach(checkbox => {
+    //             selectedSizes.push(checkbox.value);
+    //         });
+
+    //         if (selectedSizes.length > 0) {
+    //             params.append('size', selectedSizes.join(','));
+    //         }
+
+    //         // Collect selected materials
+    //         const selectedMaterials = [];
+    //         document.querySelectorAll('input[name="material[]"]:checked').forEach(checkbox => {
+    //             selectedMaterials.push(checkbox.value);
+    //         });
+
+    //         if (selectedMaterials.length > 0) {
+    //             params.append('material', selectedMaterials.join(','));
+    //         }
+
+    //         // Collect selected colors
+    //         const selectedColors = [];
+    //         document.querySelectorAll('input[name="color[]"]:checked').forEach(checkbox => {
+    //             selectedColors.push(checkbox.value);
+    //         });
+
+    //         if (selectedColors.length > 0) {
+    //             params.append('color', selectedColors.join(','));
+    //         }
+
+    //         const selectedPrice = document.querySelector('input[name="price"]:checked');
+    //         if (selectedPrice) {
+    //             params.append('price', selectedPrice.value);
+    //         }
+
+    //         // Redirect to the filtered URL
+    //         const baseUrl = 'http://localhost/mvc_new/catalog/product/list/';
+    //         window.location.href = `${baseUrl}?${params.toString()}`;
+    //     });
+    // });
+    
+</script>

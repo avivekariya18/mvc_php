@@ -1,0 +1,220 @@
+<?php
+// Main view.phtml file
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link to your CSS file or include the styles from the CSS artifact -->
+</head>
+<style>
+body {
+    font-family: 'Open Sans', Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding: 25px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+p {
+    margin: 10px 0;
+    font-size: 15px;
+}
+
+strong {
+    font-weight: 600;
+    color: #444;
+}
+
+/* Table styles for order items */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, 
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table th {
+    background-color: #f1f7fb;
+    color: #2c3e50;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.table tr:hover {
+    background-color: #f9fafb;
+}
+
+.table img {
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+/* Address section styles */
+.address-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.address-section h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.address-info p {
+    margin: 10px 0;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+.address-info strong {
+    min-width: 120px;
+    display: inline-block;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Order summary section styles */
+.order-summary {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+
+.order-total {
+    background-color: #e9f7fe;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+/* Button styles */
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+    
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+    
+    .table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+    
+    .section {
+        padding: 15px;
+    }
+}
+</style>
+<body>
+    <div class="container main-container">
+        <div class="page-header">
+            <h2>Order Details</h2>
+        </div>
+        
+        <div class="order-sections">
+            <!-- Order Summary Section -->
+            <div class="order-summary-section">
+                <?php echo $this->getChildHtml('order_info'); ?>
+            </div>
+            
+            <!-- Order Items Section -->
+            <div class="order-items-section">
+                <?php echo $this->getChildHtml('order_item'); ?>
+            </div>
+            
+            <!-- Order Address Section -->
+            <div class="order-address-section">
+                <?php echo $this->getChildHtml('order_address'); ?>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

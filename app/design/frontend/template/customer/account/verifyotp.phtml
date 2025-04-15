@@ -1,0 +1,128 @@
+<form id="otpVerificationForm" method="post" action="<?php echo $this->getUrl('*/*/verify') ?>" class="otp-verification-form">
+  <h2 class="otp-verification-title">Verify Your Identity</h2>
+  <p class="otp-verification-description">Enter the verification code sent to your email address.</p>
+
+  <div class="otp-verification-form-group">
+    <label for="otpCode" class="otp-verification-label">Verification Code</label>
+    <input
+      type="text"
+      id="otpCode"
+      name="otp"
+      placeholder="Enter your 4-digit code"
+      required
+      maxlength="4"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      autocomplete="one-time-code"
+      class="otp-verification-input">
+  </div>
+
+  <button type="submit" class="otp-verification-button">
+    <span class="btn-text">Verify Code</span>
+  </button>
+
+  <div class="otp-verification-footer">
+    <a href="<?php echo $this->getUrl('//forget') ?>" class="otp-verification-link">Didn't receive a code?</a>
+  </div>
+</form>
+
+<style>
+  .otp-verification-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  .otp-verification-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+
+  .otp-verification-description {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+  }
+
+  .otp-verification-form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .otp-verification-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #444;
+  }
+
+  .otp-verification-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-align: center;
+    font-weight: 600;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .otp-verification-input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+    outline: none;
+  }
+
+  .otp-verification-input::placeholder {
+    color: #aaa;
+    font-weight: normal;
+    letter-spacing: normal;
+  }
+
+  .otp-verification-button {
+    display: block;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: capitalize;
+    transition: background-color 0.2s;
+  }
+
+  .otp-verification-button:hover {
+    background-color: #3a80d2;
+  }
+
+  .otp-verification-button:active {
+    transform: translateY(1px);
+  }
+
+  .otp-verification-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .otp-verification-link {
+    font-size: 0.9rem;
+    color: #4a90e2;
+    text-decoration: none;
+  }
+
+  .otp-verification-link:hover {
+    text-decoration: underline;
+  }
+</style>

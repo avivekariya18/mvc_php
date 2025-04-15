@@ -1,0 +1,516 @@
+<?php $filter = $this->getFilterData();
+$categories = $this->getCategory();
+?>
+<style>
+    /* Filters Container */
+    aside.col-md-3 {
+        padding-right: 30px;
+    }
+
+    /* Main Filters Heading */
+    .form-group h4 {
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    /* Filter Section Titles */
+    .form-group label:first-of-type {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: block;
+        color: #333;
+        position: relative;
+    }
+
+    /* Expandable/Collapsible Filter Headings */
+    .form-group label:first-of-type::before {
+        content: "";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 5px 0 5px;
+        border-color: #333 transparent transparent transparent;
+        margin-right: 8px;
+        transition: transform 0.3s;
+        vertical-align: middle;
+    }
+
+    /* Expanded state for filter sections */
+    .form-group.expanded label:first-of-type::before {
+        transform: rotate(-90deg);
+    }
+
+    /* Filter Options Container */
+    .form-group>div {
+        margin-bottom: 20px;
+        padding-left: 5px;
+    }
+
+    /* Checkbox and Radio Button Styling */
+    .form-check {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    /* Custom Checkbox and Radio Button */
+    .form-check-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Checkbox and Radio Button Labels */
+    .form-check-label {
+        font-size: 13px;
+        color: #555;
+        cursor: pointer;
+        display: block;
+        padding-left: 5px;
+        text-transform: capitalize;
+        position: relative;
+    }
+
+    /* Custom Checkbox Appearance */
+    .form-check-label::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 2px;
+        width: 15px;
+        height: 15px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+    }
+
+    /* Custom Radio Button Appearance */
+    input[type="radio"]+.form-check-label::before {
+        border-radius: 50%;
+    }
+
+    /* Checked State for Checkboxes */
+    input[type="checkbox"]:checked+.form-check-label::before {
+        background-color: #fff;
+        border-color: #555;
+    }
+
+    input[type="checkbox"]:checked+.form-check-label::after {
+        content: "";
+        position: absolute;
+        left: -16px;
+        top: 5px;
+        width: 7px;
+        height: 7px;
+        background-color: #333;
+    }
+
+    /* Checked State for Radio Buttons */
+    input[type="radio"]:checked+.form-check-label::before {
+        background-color: #fff;
+        border-color: #555;
+    }
+
+    input[type="radio"]:checked+.form-check-label::after {
+        content: "";
+        position: absolute;
+        left: -16px;
+        top: 5px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #333;
+    }
+
+    /* Filter Section Animation */
+    .form-group {
+        margin-bottom: 15px;
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+    }
+
+    /* Filter Category Title Styling */
+    #filter-form>.form-group:first-of-type h4 {
+        font-size: 20px;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    /* Collapsible Sections (TYPE, GENDER, etc.) */
+    .form-group:not(:first-of-type) {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+
+    /* Accordion-style expand/collapse icons */
+    [class^="dial-"],
+    [class^="strap-"],
+    .type,
+    .gender,
+    .price,
+    .discount {
+        position: relative;
+        cursor: pointer;
+    }
+
+    /* Expand/Collapse indicator arrow */
+    .type::after,
+    .gender::after,
+    .price::after,
+    .discount::after,
+    [class^="dial-"]::after,
+    [class^="strap-"]::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        transition: transform 0.3s;
+    }
+
+    /* Rotated arrow for expanded sections */
+    .form-group.expanded .type::after,
+    .form-group.expanded .gender::after,
+    .form-group.expanded .price::after,
+    .form-group.expanded .discount::after,
+    .form-group.expanded [class^="dial-"]::after,
+    .form-group.expanded [class^="strap-"]::after {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* Main "FILTERS" title */
+    .filters {
+        font-size: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 25px;
+        color: #333;
+    }
+</style>
+<aside class="col-md-3">
+    <h3 class="filters">FILTERS</h3>
+    <form id="filter-form" method="GET">
+        <input type="hidden" name="category_id" value="<?php echo isset($_GET['category_id']) ? htmlspecialchars($_GET['category_id']) : ''; ?>">
+
+        <!-- BRANDS -->
+        <div class="form-group mb-3">
+            <label for="brands" class="brands">BRANDS</label>
+            <div>
+                <?php $selectedCategories = isset($_GET['category_id']) ? explode(',', $_GET['category_id']) : []; ?>
+                <?php foreach ($categories as $category): ?>
+                    <div class="form-check">
+                        <input type="checkbox"
+                            name="category_id[]"
+                            value="<?php echo htmlspecialchars($category->getCategoryId()); ?>"
+                            class="form-check-input checkbox"
+                            id="category-<?php echo htmlspecialchars($category->getCategoryId()); ?>"
+                            <?php echo in_array($category->getCategoryId(), $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="category-<?php echo htmlspecialchars($category->getCategoryId()); ?>">
+                            <?php echo htmlspecialchars($category->getName()); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- TYPE -->
+        <div class="form-group mb-3">
+            <label for="type" class="type">TYPE</label>
+            <div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="type[]" value="watch_rings" id="type_watch_rings">
+                    <label class="form-check-label" for="type_watch_rings">WATCH RINGS</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="type[]" value="mechanical_watches" id="type_mechanical_watches">
+                    <label class="form-check-label" for="type_mechanical_watches">MECHANICAL WATCHES</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="type[]" value="leather_watches" id="type_leather_watches">
+                    <label class="form-check-label" for="type_leather_watches">LEATHER WATCHES</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="type[]" value="stainless_steel_watches" id="type_stainless_steel_watches">
+                    <label class="form-check-label" for="type_stainless_steel_watches">STAINLESS STEEL WATCHES</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- GENDER -->
+        <div class="form-group mb-3">
+            <label for="gender" class="gender">GENDER</label>
+            <div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="gender[]" value="men" id="gender_men">
+                    <label class="form-check-label" for="gender_men">MEN</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="gender[]" value="women" id="gender_women">
+                    <label class="form-check-label" for="gender_women">WOMEN</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="gender[]" value="unisex" id="gender_unisex">
+                    <label class="form-check-label" for="gender_unisex">UNISEX</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRICE -->
+        <div class="form-group mb-3">
+            <label for="price" class="price">PRICE</label>
+            <div>
+                <?php
+                $priceRanges = [
+                    '1-500' => '₹1 - ₹500',
+                    '500-1000' => '₹500 - ₹1000',
+                    '1000-5000' => '₹1000 - ₹5000',
+                    '5000-10000' => '₹5000 - ₹10000',
+                    '10000-20000' => '₹10000 - ₹20000',
+                    '20000' => "₹20000 above",
+                    'Under-10000' => "Under ₹10000"
+                ];
+                $selectedPrice = isset($_GET['price']) ? $_GET['price'] : '';
+                ?>
+                <?php foreach ($priceRanges as $range => $label): ?>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input"
+                            name="price"
+                            value="<?php echo htmlspecialchars($range); ?>"
+                            id="price_<?php echo htmlspecialchars($range); ?>"
+                            <?php echo $range === $selectedPrice ? 'checked' : ''; ?>>
+                        <label class="form-check-label"
+                            for="price_<?php echo htmlspecialchars($range); ?>">
+                            <?php echo htmlspecialchars($label); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- DISCOUNT -->
+        <div class="form-group mb-3">
+            <label for="discount" class="discount">DISCOUNT</label>
+            <div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="discount[]" value="10" id="discount_10">
+                    <label class="form-check-label" for="discount_10">10% and above</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="discount[]" value="20" id="discount_20">
+                    <label class="form-check-label" for="discount_20">20% and above</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="discount[]" value="30" id="discount_30">
+                    <label class="form-check-label" for="discount_30">30% and above</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="discount[]" value="40" id="discount_40">
+                    <label class="form-check-label" for="discount_40">40% and above</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="discount[]" value="50" id="discount_50">
+                    <label class="form-check-label" for="discount_50">50% and above</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAL COLOUR -->
+        <div class="form-group mb-3">
+            <label for="dial-colour" class="dial-colour">DIAL COLOUR</label>
+            <div>
+                <?php foreach ($colors as $color): ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input checkbox"
+                            name="color[]"
+                            value="<?php echo htmlspecialchars($color); ?>"
+                            id="color_<?php echo htmlspecialchars($color); ?>"
+                            <?php echo in_array($color, $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label"
+                            for="color_<?php echo htmlspecialchars($color); ?>">
+                            <?php echo htmlspecialchars(ucfirst($color)); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- DIAL SHAPE -->
+        <div class="form-group mb-3">
+            <label for="dial-shape" class="dial-shape">DIAL SHAPE</label>
+            <div>
+                <?php foreach ($shaps as $shape): ?>
+                    <div class="form-check">
+                        <input type="checkbox"
+                            name="size[]"
+                            id="size_<?php echo htmlspecialchars($shape); ?>"
+                            value="<?php echo htmlspecialchars($shape); ?>"
+                            class="form-check-input checkbox"
+                            <?php echo in_array($shape, $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="size_<?php echo htmlspecialchars($shape); ?>">
+                            <?php echo htmlspecialchars(ucfirst($shape)); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- DIAL TYPE -->
+        <div class="form-group mb-3">
+            <label for="dial-type" class="dial-type">DIAL TYPE</label>
+            <div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="dial_type[]" value="analog" id="dial_type_analog">
+                    <label class="form-check-label" for="dial_type_analog">Analog</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="dial_type[]" value="digital" id="dial_type_digital">
+                    <label class="form-check-label" for="dial_type_digital">Digital</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="dial_type[]" value="analog_digital" id="dial_type_analog_digital">
+                    <label class="form-check-label" for="dial_type_analog_digital">Analog-Digital</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- STRAP COLOR -->
+        <div class="form-group mb-3">
+            <label for="strap-color" class="strap-color">STRAP COLOR</label>
+            <div>
+                <?php
+                $strapColors = ['black', 'brown', 'silver', 'gold', 'blue', 'green', 'red'];
+                foreach ($strapColors as $color): ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input checkbox"
+                            name="strap_color[]"
+                            value="<?php echo htmlspecialchars($color); ?>"
+                            id="strap_color_<?php echo htmlspecialchars($color); ?>">
+                        <label class="form-check-label" for="strap_color_<?php echo htmlspecialchars($color); ?>">
+                            <?php echo htmlspecialchars(ucfirst($color)); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- STRAP MATERIAL -->
+        <div class="form-group mb-3">
+            <label for="strap-material" class="strap-material">STRAP MATERIAL</label>
+            <div>
+                <?php foreach ($Materials as $material): ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input checkbox"
+                            name="material[]"
+                            value="<?php echo htmlspecialchars($material); ?>"
+                            id="material_<?php echo htmlspecialchars($material); ?>"
+                            <?php echo in_array($material, $selectedCategories) ? 'checked' : ''; ?>>
+                        <label class="form-check-label"
+                            for="material_<?php echo htmlspecialchars($material); ?>">
+                            <?php echo htmlspecialchars(ucfirst($material)); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- DIAL THICKNESS -->
+        <div class="form-group mb-3">
+            <label for="dial-thickness" class="dial-thickness">DIAL THICKNESS</label>
+            <div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="dial_thickness[]" value="slim" id="dial_thickness_slim">
+                    <label class="form-check-label" for="dial_thickness_slim">Slim (< 8mm)</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="dial_thickness[]" value="medium" id="dial_thickness_medium">
+                    <label class="form-check-label" for="dial_thickness_medium">Medium (8-12mm)</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input checkbox" name="dial_thickness[]" value="thick" id="dial_thickness_thick">
+                    <label class="form-check-label" for="dial_thickness_thick">Thick (> 12mm)</label>
+                </div>
+            </div>
+        </div>
+    </form>
+</aside>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all filter section headers
+        const filterHeaders = document.querySelectorAll('.form-group > label:first-of-type');
+
+        // Add click event to each filter header for expand/collapse functionality
+        filterHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const parentGroup = this.closest('.form-group');
+                parentGroup.classList.toggle('expanded');
+
+                // Find the content container
+                const contentDiv = this.nextElementSibling;
+
+                // Toggle visibility
+                if (parentGroup.classList.contains('expanded')) {
+                    contentDiv.style.display = 'block';
+                } else {
+                    contentDiv.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize - hide all filter contents except the first one
+        const filterGroups = document.querySelectorAll('.form-group');
+        filterGroups.forEach((group, index) => {
+            const contentDiv = group.querySelector('div');
+            if (index !== 0) { // Keep first one visible
+                contentDiv.style.display = 'none';
+            } else {
+                group.classList.add('expanded');
+            }
+        });
+
+        // Handle filter form submission
+        document.getElementById('filter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = new FormData(this);
+            const params = new URLSearchParams();
+
+            // Collect filter values
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="category_id[]"]:checked')).map(cb => cb.value);
+            const selectedSizes = Array.from(document.querySelectorAll('input[name="size[]"]:checked')).map(cb => cb.value);
+            const selectedMaterials = Array.from(document.querySelectorAll('input[name="material[]"]:checked')).map(cb => cb.value);
+            const selectedColors = Array.from(document.querySelectorAll('input[name="color[]"]:checked')).map(cb => cb.value);
+            const selectedPrice = document.querySelector('input[name="price"]:checked')?.value;
+
+            // Add parameters only if they exist
+            if (selectedCategories.length > 0) params.append('category_id', selectedCategories.join(','));
+            if (selectedSizes.length > 0) params.append('size', selectedSizes.join(','));
+            if (selectedMaterials.length > 0) params.append('material', selectedMaterials.join(','));
+            if (selectedColors.length > 0) params.append('color', selectedColors.join(','));
+            if (selectedPrice) params.append('price', selectedPrice);
+
+            // Redirect with filters applied
+            const baseUrl = window.location.pathname;
+            window.location.href = `${baseUrl}?${params.toString()}`;
+        });
+
+        // Add automatic filter application when a checkbox or radio button changes
+        const filterInputs = document.querySelectorAll('#filter-form input[type="checkbox"], #filter-form input[type="radio"]');
+        filterInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                document.getElementById('filter-form').dispatchEvent(new Event('submit'));
+            });
+        });
+    });
+</script>

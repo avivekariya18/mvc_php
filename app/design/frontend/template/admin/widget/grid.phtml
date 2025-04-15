@@ -1,0 +1,133 @@
+
+<?php
+
+// $this->getChildHtml(''); 
+?>
+<?php
+$columns = $this->getColumns();
+$collection = $this->getCollection()->getdata();
+// echo "<pre>";
+// print_r($columns);
+// echo "</pre>";
+$data = $this->listdata();
+$this->getChildHtml("toolbar");
+?>
+<style>
+    /* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 20px;
+}
+
+.col-md-2 {
+    margin-bottom: 20px;
+}
+
+.add-new button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.add-new button:hover {
+    background: #0056b3;
+}
+
+/* Table Styling */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+th {
+    background: #007bff;
+    color: white;
+    text-transform: uppercase;
+}
+
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+tr:hover {
+    background: #f1f1f1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+</style>
+
+<div class="col-md-2">
+    <br>
+
+    <a class="add-new" href="<?php echo $this->getUrl('*/*/new'); ?>"><button>item</button></a>
+    <a class="add-new" href="<?php echo $this->getUrl('*/*/exportCsv'); ?>"><button>export to CSV</button></a>
+
+</div>
+
+<table>
+    <tr>
+        <?php foreach ($columns as $column):?>
+            <th><?php echo  $column->getData()['data_index'] ?></th>
+        <?php endforeach ?>
+    </tr>
+    <?php foreach ($columns as $key => $column): ?>
+        <th><?php echo  $column->getFilter()->render() ?></th>
+    <?php endforeach ?>
+    <?php foreach ($collection as $data):  ?>
+        <tr>
+            <?php foreach ($columns as $column):
+            ?>
+                <td>
+                    <?php echo $column->setrow($data->getData())->render() ?>
+                </td>
+                <?php
+                // if(!array_key_exists('columns',$column)){
+                //     echo  $data->getData()[$column['data_index']];   
+                // }
+                // else{
+                //     $id = $data->getData()[$column['primary_key']];
+                //    echo $this->renderValue($column['data_index'],$id);
+                // }
+                     ?>
+                
+
+            <?php endforeach ?>
+            <?php // echo $this->renderValue('edit') ?>
+        <?php endforeach ?>
+        </tr>
+
+</table>

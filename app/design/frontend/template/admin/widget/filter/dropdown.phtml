@@ -1,0 +1,13 @@
+<!-- <h1>droupdown</h1> -->
+ <?php $data = $this->getData();
+//  echo "<pre>";
+//  print_r($data); ?>
+
+<select>
+    <?php foreach($data['filter_option'] as $value): ?>
+        <option value="<?php echo $value ?>"><?php echo $value ?></option>
+    <?php endforeach ?>
+  <!-- <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option> -->
+</select>

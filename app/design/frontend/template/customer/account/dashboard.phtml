@@ -1,0 +1,27 @@
+
+    <div class="container main-container">
+        
+        
+        <div class="order-sections">
+            <!-- Order Summary Section -->
+            
+            <!-- Order Items Section -->
+            <div class="order-summary-section">
+                <?php echo $this->getChildHtml('dashboard_details'); ?>
+            </div>
+            <div class="order-items-section">
+                <?php echo $this->getChildHtml('dashboard_address'); ?>
+            </div>  
+        </div>
+    </div>
+    <script>
+        document.getElementById('addAddressBtn').addEventListener('click', function() {
+            document.getElementById('addAddressForm').style.display = 'block';
+            this.style.display = 'none';
+        });
+        
+        document.getElementById('cancelAddressBtn').addEventListener('click', function() {
+            document.getElementById('addAddressForm').style.display = 'none';
+            document.getElementById('addAddressBtn').style.display = 'block';
+        });
+    </script>

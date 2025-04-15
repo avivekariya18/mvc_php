@@ -1,0 +1,7 @@
+<?php $data = $this->getData();?>
+<?php $id = $this->getid()?>
+<select>
+    <?php foreach($data['filter_option'] as $value): ?>
+        <option value="<?php echo $value ?>" <?php //echo ($value == ) ?>><?php echo $value ?></option>
+    <?php endforeach ?>
+</select>

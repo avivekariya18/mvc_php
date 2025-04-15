@@ -1,0 +1,233 @@
+<?php $categoryData = $this->getCategoryProductCount();
+
+
+$categoryNames = [];
+$productCount = [];
+foreach ($categoryData as $category) {
+    $categoryNames[] = $category->getCategoryName();
+    $productCount[] = $category->getProductCount(); // Extract category names
+}
+$categoryNamesJson = json_encode($categoryNames);
+// echo "<pre>";
+// print_r($categoryData);
+// print($categoryNamesJson);
+$productCountJson = json_encode($productCount);
+// print($productCountJson);
+?>
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 1200px;
+        padding: 30px 15px;
+    }
+
+    .dashboard-card {
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-card .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+
+    .dashboard-card .card-icon {
+        font-size: 3rem;
+        opacity: 0.5;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .dashboard-card h5 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .dashboard-card h2 {
+        font-weight: 700;
+    }
+
+    .bg-primary {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%) !important;
+    }
+
+    .bg-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    }
+
+    .bg-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%) !important;
+    }
+
+    .bg-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #ff5722 100%) !important;
+    }
+
+    .export-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .export-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .export-btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    canvas {
+        max-height: 400px;
+    }
+
+    h2 {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+</style>
+<br>
+<!-- <button class="export-container"> -->
+    <a href="<?php echo $this->getUrl('*/*/exportCsv'); ?>" class="export-btn">Export to CSV</a>
+<!-- </button> -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+    <div class="row">
+        <!-- Orders Count -->
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-primary text-white p-3">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Orders</h5>
+                        <h2 id="orderCount"><?php echo $this->getTotalOrder()['total_order'] ?></h2>
+                    </div>
+                    <i class="fas fa-shopping-cart card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Count -->
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-success text-white p-3">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Products</h5>
+                        <h2 id="productCount"><?php echo $this->getTotalProduct()['total_product']; ?></h2>
+                    </div>
+                    <i class="fas fa-boxes card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Count -->
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-warning text-white p-3">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Categories</h5>
+                        <h2 id="categoryCount"><?php echo $this->getTotalCategory()['total_category'] ?></h2>
+                    </div>
+                    <i class="fas fa-list card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Count -->
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-danger text-white p-3">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Customers</h5>
+                        <h2 id="customerCount">250</h2>
+                    </div>
+                    <i class="fas fa-users card-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-center mb-4">Product & Category Analysis</h2>
+
+    <div class="row">
+        <!-- Product Count per Category -->
+        <div class="col-md-6">
+            <div class="card dashboard-card p-3">
+                <h5 class="text-center">Products per Category</h5>
+                <canvas id="productCategoryChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Category Distribution -->
+        <div class="col-md-6">
+            <div class="card dashboard-card p-3">
+                <h5 class="text-center">Category Distribution</h5>
+                <canvas id="categoryDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Product Count per Category - Bar Chart
+        const ctx1 = document.getElementById("productCategoryChart").getContext("2d");
+        new Chart(ctx1, {
+            type: "bar",
+            data: {
+                labels: <?php echo $categoryNamesJson; ?>,
+                datasets: [{
+                    label: "Products Count",
+                    data: <?php echo $productCountJson; ?>, // Dynamic product count per category
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Category Distribution - Pie Chart
+        const ctx2 = document.getElementById("categoryDistributionChart").getContext("2d");
+        new Chart(ctx2, {
+            type: "pie",
+            data: {
+                labels: <?php echo $categoryNamesJson; ?>, // Use dynamic category names here
+                datasets: [{
+                    data: <?php echo $productCountJson; ?>, // Use dynamic product count here
+                    backgroundColor: ["#007bff", "#28a745", "#ffc107", "#dc3545", "#6f42c1"], // You can adjust the colors if you have more categories
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    });
+</script>
