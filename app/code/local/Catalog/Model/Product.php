@@ -89,7 +89,7 @@ class Catalog_Model_Product extends Core_Model_Abstract
 
    protected function _afterSave()
    {
-      $attributes = Mage::getModel('catalog/attribute')->getCollection()->getData();;
+      $attributes = Mage::getModel('catalog/attribute')->getCollection()->getData();
       foreach ($attributes as $_attribute) {
          $productAttributes = Mage::getModel('catalog/product_attribute')
             ->getCollection()

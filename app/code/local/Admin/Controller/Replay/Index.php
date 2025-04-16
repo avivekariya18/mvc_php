@@ -32,6 +32,7 @@ class Admin_Controller_Replay_Index extends Core_Controller_Admin_Action
         $this->getLayout()->toHtml();
     }
     public function commentsaveAction(){
+        Mage::log("123");
         $comment = Mage::getModel('core/request')->getParam('comment');
         $ticketId = Mage::getModel('core/request')->getParam('ticket_id');
         $parentId = Mage::getModel('core/request')->getParam('parent_id');
@@ -50,6 +51,12 @@ class Admin_Controller_Replay_Index extends Core_Controller_Admin_Action
 
         // Mage::log($commentModel->getData());
         print_r($commentModel->getCommentId());
-        
+    }
+    public function activesaveAction(){
+        $commentId = Mage::getModel('core/request')->getParam('comment_id');
+        Mage::getModel('replay/ticket_comment')
+            ->setCommentId($commentId)
+            ->setIsActive('0')
+            ->save();
     }
 }

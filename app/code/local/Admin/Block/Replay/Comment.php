@@ -2,12 +2,6 @@
 class Admin_Block_Replay_Comment extends Core_Block_Template
 {
     protected $_arr = [];
-    // public function getTicket(){
-    //     $ticketId =  Mage::getModel('core/request')
-    //         ->getQuery('ticket_id');
-    //     return $ticketModel = Mage::getModel('replay/ticket')
-    //         ->load($ticketId);
-    // }
     public function getTicket()
     {
         return Mage::getModel('replay/ticket')
@@ -26,12 +20,22 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
     {
         return $this->getRequest()->getQuery('ticket_id');
     }
+    public function getshow()
+    {
+        return $this->getRequest()->getQuery('show');
+    }
     public function getComments()
     {
-        //$this->getId();
-        return Mage::getModel('replay/ticket_comment')
-            ->getCollection()
-            ->addFieldToFilter('ticket_id', $this->getId());
+        if ($this->getshow() == "") {
+            return Mage::getModel('replay/ticket_comment')
+                ->getCollection()
+                ->addFieldToFilter('ticket_id', $this->getId())
+                ->addFieldToFilter('is_active', 1);
+        } else {
+            return Mage::getModel('replay/ticket_comment')
+                ->getCollection()
+                ->addFieldToFilter('ticket_id', $this->getId());
+        }
     }
     public function dataArray($id = null)
     {
@@ -70,8 +74,6 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
         $rows = [];
         $rowspans = [];
         $this->getPaths($tree, [], $rows, $rowspans);
-        // Mage::log($rows);
-        // Mage::log($rowspans);
         $html = '';
         if (!empty($rows)) {
             if (!empty($rowspans)) {
@@ -89,13 +91,20 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
             $html .= '</td>';
             foreach ($rows[0] as $key => $val) {
                 $span = isset($rowspans[$key][$val]) ? $rowspans[$key][$val] : 1;
-                $html .= '<td rowspan="' . $span . '">' . $this->getarr($val)->getComment();
-                $html .= '<span hidden>' . $val . '</span>';
-                if ($key == $last) {
-                    $html .= "<td><button onclick='openTextbox()'>add comment</button><br>";
-                    $html .= "<button onclick='complited(this)'>complited</button></td>";
+                if (!$this->getarr($val)->getIsActive()) {
+                    $html .= '<td class="bg-success" rowspan="' . $span . '">' . $this->getarr($val)->getComment();
+                } else {
+                    $html .= '<td rowspan="' . $span . '">' . $this->getarr($val)->getComment();
+                    $html .= '<span hidden>' . $val . '</span>';
+                    if ($key == $last) {
+                        $html .= "<button onclick='complited(this)'>complited</button>";
+                    }
+                    $html .= '</td>';
+                    if ($key == $last) {
+                        $html .= '<td><button onclick="openTextbox()">add comment</button><br></td>';
+                    }
                 }
-                $html .= '</td>';
+
                 $printed[$key][$val] = true;
             }
             $html .= '</tr>';
@@ -104,18 +113,21 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
                 $html .= '<tr>';
                 foreach ($rows[$i] as $key => $val) {
                     if (!isset($printed[$key][$val])) {
-                        // $this->getName();
                         $span = isset($rowspans[$key][$val]) ? $rowspans[$key][$val] : 1;
-                        $html .= '<td rowspan="' . $span . '">' . $this->getarr($val)->getComment();
-                        // echo "<pre>";
-                        // print_r();
-                        // die;
+                        if (!$this->getarr($val)->getIsActive()) {
+                            $html .= '<td class="bg-success" rowspan="' . $span . '">' . $this->getarr($val)->getComment();
+                        } else {
+                            $html .= '<td rowspan="' . $span . '">' . $this->getarr($val)->getComment();
+                        }
                         $html .= '<span hidden>' . $val . '</span>';
                         if ($key == $last) {
-                            $html .= "<td><button onclick='openTextbox()'>add comment</button><br>";
-                            $html .= "<button onclick='complited(this)'>complited</button></td>";
+                            $html .= "<button onclick='complited(this)'>complited</button>";
                         }
                         $html .= '</td>';
+                        if ($key == $last) {
+                            $html .= '<td><button onclick="openTextbox()">add comment</button><br></td>';
+                        }
+
                         $printed[$key][$val] = true;
                     }
                 }
@@ -128,7 +140,6 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
             $html .= '<tr>';
             $html .= "<td>{$ticket}<span hidden>NULL</span></td>";
             $html .= "<td><button onclick='openTextbox()'>add comment</button><br>";
-            $html .= "<button onclick='complited(this)'>complited</button></td>";
             $html .= '</tr>';
             $html .= '</table>';
         }
@@ -136,8 +147,6 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
     }
     function getPaths($tree, $path = [], &$rows = [], &$rowspans = [])
     {
-        // echo "<pre>";
-        // print_r($tree);
         foreach ($tree as $t) {
             $currpath = array_merge($path, [$t['id']]);
             if (empty($t['children'])) {
@@ -147,13 +156,8 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
                 $this->getPaths($t['children'], $currpath, $rows, $rowspans);
                 $temp = count($rows) - $countBefore;
                 $level = count($path);
-                // Mage::log($path);
-                // Mage::log($temp);
                 $rowspans[$level][$t['id']] = $temp;
             }
         }
-        // echo "<pre>";
-        // print_r($rows);
-        // die;
     }
 }
