@@ -26,7 +26,12 @@
 
 <?php
 $ticket = $this->getTicket();
-$tableArray = $this->dataArray();
+$ids = $this->getMinimulLevel();
+// print_r($ids);
+foreach ($ids as $id) {
+    $this->setfirstarr($id);
+    $tableArray = $this->dataArray($id);
+}
 $tree = $this->buildTree($tableArray);
 echo $this->render($tree, $ticket);
 ?>
@@ -41,8 +46,13 @@ echo $this->render($tree, $ticket);
     <textarea name="ticket_id" hidden><?php echo $this->getId() ?></textarea>
     <button type="submit">hide complited</button>
 </form>
-
+<form method="GET" action="<?php echo $this->getUrl('*/*/*') . '/' ?>">
+    <textarea name="ticket_id" hidden><?php echo $this->getId() ?></textarea>
+    <textarea name="limit"></textarea>
+    <button type="submit">limit set</button>
+</form>
 <span id="tId" hidden><?php echo $this->getId() ?></span>
+<span id="max_level" hidden><?php echo $this->getMaxLevel() ?></span>
 
 
 <!-- <script defer>

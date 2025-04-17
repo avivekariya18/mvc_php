@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<events>
+    <catalog_product_save>
+        <model>Customer_Model_Observer::productSave</model>
+        <model>Cusr_Model_Observer::productSave</model>
+    </catalog_product_save>
+</events>

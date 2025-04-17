@@ -46,12 +46,13 @@ class Admin_Controller_Product_Index extends Core_Controller_Admin_Action
         $product = $request->getParam('catalog_product');
         echo "<pre>";
         // print_r($_FILES);
-        print_r($product);
+        // print_r($product);
         //  die();
         // die();
         $productmodel->setData($product);
         // print_r($productmodel);
         $productmodel->save();
+        Mage::dispatchEvent('catalog_product_save',[$productmodel]);
         //  $product_id =  $productmodel->getProductId();
         // print_r($product_id);
         //$attributeData = $attributeModel->getCollection()->getData();

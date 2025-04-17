@@ -10,17 +10,20 @@ class Replay_Model_Ticket_Comment extends Core_Model_Abstract
     {
         $commentId = $this->getCommentId();
         $this->load($commentId);
-        $childCount = Mage::getModel('replay/ticket_comment')
+        if($this->getparentId() != null  || $this->getparentId() != ''){
+            $childCount = Mage::getModel('replay/ticket_comment')
             ->getcollection()
             ->select(['total'=>'COUNT(*)'])
             ->addFieldToFilter('parent_id', $this->getParentId())
             ->addFieldToFilter('is_active',1)
             ->getfirstItem();
-        if($childCount->getTotal() == 0){
+        if($childCount->getTotal() == 0 ){
             Mage::getModel('replay/ticket_comment')
                 ->setCommentId($this->getParentId())
                 ->setIsActive(0) 
                 ->save();
         }
+        }
+        
     }
 }

@@ -8,6 +8,10 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
             ->load($this->getId())
             ->getTitle();
     }
+    public function setfirstarr($id)
+    {
+        $this->_arr[0][] = $id;
+    }
     public function getarr($val)
     {
         return Mage::getModel('replay/ticket_comment')
@@ -15,6 +19,22 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
             ->addFieldToFilter('ticket_id', $this->getId())
             ->addFieldToFilter('comment_id', $val)
             ->getData()[0];
+    }
+    function getMinimulLevel()
+    {
+        $ids = [];
+        $minimum = $this->getComments()
+            ->select(['minimum' => "MIN(level)"])
+            ->getFirstItem()
+            ->getMinimum();
+        // Mage::log($minimum);
+        $comments = $this->getComments()
+            ->addFieldToFilter('level', $minimum)
+            ->getData();
+        foreach ($comments as $comment) {
+            array_push($ids, $comment->getCommentId());
+        }
+        return $ids;
     }
     public function getId()
     {
@@ -24,33 +44,45 @@ class Admin_Block_Replay_Comment extends Core_Block_Template
     {
         return $this->getRequest()->getQuery('show');
     }
+    public function getMaxLevel()
+    {
+        return Mage::getModel('replay/ticket_comment')
+            ->getCollection()
+            ->addFieldToFilter('ticket_id', $this->getId())
+            ->select(['maximum' => 'MAX(level)'])
+            ->getFirstItem()
+            ->getMaximum();
+    }
     public function getComments()
     {
+        $limit = $this->getRequest()->getQuery('limit');
+        $comments = Mage::getModel('replay/ticket_comment')
+            ->getCollection()
+            ->addFieldToFilter('ticket_id', $this->getId());
+        if ($limit != '') {
+            $max = $this->getMaxLevel();
+            $comments->addFieldToFilter('level', ['>' => $max - $limit]);
+        }
         if ($this->getshow() == "") {
-            return Mage::getModel('replay/ticket_comment')
-                ->getCollection()
-                ->addFieldToFilter('ticket_id', $this->getId())
+            return $comments
                 ->addFieldToFilter('is_active', 1);
         } else {
-            return Mage::getModel('replay/ticket_comment')
-                ->getCollection()
-                ->addFieldToFilter('ticket_id', $this->getId());
+            return $comments;
         }
     }
-    public function dataArray($id = null)
+    public function dataArray($id)
     {
 
         $data = $this->getComments()
             ->addFieldToFilter('parent_id', $id)
             ->getData();
-        // print_r($data);
 
         if (!$data) {
             $this->_arr[$id] = [];
             return;
         }
         foreach ($data as $d) {
-            $this->_arr[is_null($id) ? 0 : $id][] = $d->getCommentId();
+            $this->_arr[$id][] = $d->getCommentId();
             $this->dataArray($d->getCommentId());
         }
         return $this->_arr;

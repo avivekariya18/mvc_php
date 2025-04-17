@@ -31,28 +31,39 @@ class Admin_Controller_Replay_Index extends Core_Controller_Admin_Action
         $this->getLayout()->getChild('head')->addJs('replay/comment.js');
         $this->getLayout()->toHtml();
     }
-    public function commentsaveAction(){
-        Mage::log("123");
+    public function commentsaveAction()
+    {
         $comment = Mage::getModel('core/request')->getParam('comment');
         $ticketId = Mage::getModel('core/request')->getParam('ticket_id');
         $parentId = Mage::getModel('core/request')->getParam('parent_id');
-        if($parentId == 'NULL'){
+        $max = Mage::getModel('core/request')->getParam('max');
+        // $max = Mage::getModel('replay/ticket_comment')
+        //     ->getCollection()
+        //     ->addFieldToFilter('ticket_id', $ticketId)
+        //     ->select(['maximum' => 'MAX(level)'])
+        //     ->getFirstItem()
+        //     ->getMaximum();
+
+        if ($parentId == 'NULL') {
             $commentModel = Mage::getModel('replay/ticket_comment')
-            ->setComment($comment)
-            ->setTicketId($ticketId)
-            ->save();
-        }else{
+                ->setComment($comment)
+                ->setTicketId($ticketId)
+                ->setLevel($max+1)
+                ->save();
+        } else {
             $commentModel = Mage::getModel('replay/ticket_comment')
-            ->setComment($comment)
-            ->setTicketId($ticketId)
-            ->setParentId($parentId)
-            ->save();
+                ->setComment($comment)
+                ->setTicketId($ticketId)
+                ->setParentId($parentId)
+                ->setLevel($max+1)
+                ->save();
         }
 
         // Mage::log($commentModel->getData());
         print_r($commentModel->getCommentId());
     }
-    public function activesaveAction(){
+    public function activesaveAction()
+    {
         $commentId = Mage::getModel('core/request')->getParam('comment_id');
         Mage::getModel('replay/ticket_comment')
             ->setCommentId($commentId)
